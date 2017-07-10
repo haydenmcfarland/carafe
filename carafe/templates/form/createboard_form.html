@@ -1,0 +1,14 @@
+<div>
+    <div>
+        <div>
+            {% from "form/_formhelpers.html" import render_field %}
+            <form method=post action="{{ url_for('create_board') }}">
+                <dl>
+                    {{render_field(form.name, size=50, maxlength=80, placeholder="Board Name") }}
+                    {{render_field(form.desc, rows=3, cols=50, maxlength=80, placeholder="What is the purpose of this board?")}}
+                    <input class="btn btn-primary" type=submit value=Create>
+                </dl>
+            </form>
+        </div>
+    </div>
+</div>

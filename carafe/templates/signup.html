@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    	  <div class="col-md-6">
+				<div>
+					<h3>Register to start posting!</h3><br><br>
+                    {% from "form/_formhelpers.html" import render_field %}
+                    <form method=post>
+                      <dl>
+                        {{ render_field(form.username, placeholder='Username') }}
+                        {{ render_field(form.email, placeholder='example@gmail.com') }}
+                        {{ render_field(form.password, placeholder='Password') }}
+                        {{ render_field(form.confirm, placeholder='Confirm password') }}
+                        <input class="btn btn-primary" type=submit value=Submit>
+                      </dl>
+
+                    </form>
+				</div>
+			</div>
+		  </div>
+</div>
+{% endblock %}

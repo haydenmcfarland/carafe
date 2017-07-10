@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel=stylesheet type=text/css href="{{url_for('static', filename='style/jquery.dataTables.min.css')}}" />
+<script src="{{url_for('static', filename='js/jquery.dataTables.min.js')}}"/></script>
+<div class="row row-striped">
+    <div class="col-md-12">
+        <h3>Admin Panel</h3>
+    </div>
+</div>
+<div class="row row-striped">
+    <div class="col-md-12">
+        <button data-toggle="collapse" data-target="#board" class="btn btn-info" role="button">
+                <i class="fa fa-chevron-down"></i>
+        </button>
+        <h3>Boards</h3>
+    </div>
+</div>
+<div id="board" class="collapse">
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Boards</h4>
+        <table id="boards" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Bid</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Deleted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for b in Board.query.all() %}
+            <tr>
+                <td>{{b.bid}}</td>
+                <td>{{b.name}}</td>
+                <td>{{b.desc}}</td>
+                <td>{{b.deleted}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        </div>
+    </div>
+</div>
+<div class="row row-striped">
+    <div class="col-md-12">
+        <button data-toggle="collapse" data-target="#post" class="btn btn-info" role="button">
+                <i class="fa fa-chevron-down"></i>
+        </button>
+        <h3>Posts</h3>
+    </div>
+</div>
+<div id="post" class="collapse">
+    <div class="row">
+        <div class="col-md-12">
+        <table id="posts" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Pid</th>
+                <th>Name</th>
+                <th>User</th>
+                <th>Deleted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in Post.query.all() %}
+            <tr>
+                <td>{{p.pid}}</td>
+                <td>{{p.name}}</td>
+                <td>{{p.get_username()}}</td>
+                <td>{{p.deleted}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        </div>
+    </div>
+</div>
+<div class="row row-striped">
+    <div class="col-md-12">
+        <button data-toggle="collapse" data-target="#comment" class="btn btn-info" role="button">
+                <i class="fa fa-chevron-down"></i>
+        </button>
+        <h3>Comments</h3>
+    </div>
+</div>
+<div id="comment" class="collapse">
+    <div class="row">
+        <div class="col-md-12">
+        <table id="comments" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Pid</th>
+                <th>Cid</th>
+                <th>User</th>
+                <th>Commented</th>
+                <th>Deleted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in Comment.query.all() %}
+            <tr>
+                <td>{{c.pid}}</td>
+                <td>{{c.cid}}</td>
+                <td>{{c.text[0:20]}}</td>
+                <td>{{c.get_username()}}</td>
+                <td>{{c.deleted}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        </div>
+    </div>
+</div>
+<div class="row row-striped">
+    <div class="col-md-12">
+        <button data-toggle="collapse" data-target="#user" class="btn btn-info" role="button">
+                <i class="fa fa-chevron-down"></i>
+        </button>
+        <h3>Users</h3>
+    </div>
+</div>
+<div id="user" class="collapse">
+    <div class="row">
+        <div class="col-md-12">
+        <table id="users" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Uid</th>
+                <th>User</th>
+                <th>Authenticated</th>
+                <th>Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in User.query.all() %}
+            <tr>
+                <td>{{u.uid}}</td>
+                <td>{{u.username}}</td>
+                <td>{{u.is_authenticated}}</td>
+                <td>{{u.is_active}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

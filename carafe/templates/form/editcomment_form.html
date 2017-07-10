@@ -1,0 +1,11 @@
+{% block content %}
+<div>
+	{% from "form/_formhelpers.html" import render_field %}
+	<form method=post action="{{ url_for('edit_comment', bid=p.bid, pid=c.pid, cid=c.cid)}}">
+		<dl>
+			{{render_field(cform.text, rows=3, cols=50, maxlength=4096, placeholder="Markdown supported.")}}
+			<input class="btn btn-primary" type=submit value=Submit>
+		</dl>
+	</form>
+</div>
+{% endblock %}

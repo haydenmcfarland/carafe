@@ -1,0 +1,12 @@
+<ol class="breadcrumb pull-right where-am-i">
+    {% if current_user.is_authenticated %}
+    <li> {{ current_user.username }}</li>
+    {% if current_user.is_admin %}
+    <li><a href="/admin/panel">Panel</a></li>
+    {% endif %}
+    <li><a href="/logout">Logout</a></li>
+    {% else  %}
+    <li><a href="/login">Login</a></li>
+    {% endif %}
+</ol>
+<div class="clearfix"></div>
