@@ -1,1 +1,1 @@
-web: gunicorn run:carafeboard
+web: gunicorn run:app
