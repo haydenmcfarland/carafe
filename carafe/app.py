@@ -1,24 +1,36 @@
-from os import environ
 from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_login import LoginManager, current_user, login_user, login_required, logout_user
 from htmlmin.main import minify
 from passlib.hash import sha512_crypt as sha
-from carafe.config import Production
+from carafe.config import load_config, update_config
 from carafe.classes.login import AnonymousUser
 from carafe.database.model import Board, Post, Comment, User, db
-from carafe.forms import BoardForm, PostForm, CommentForm, LoginForm, SignupForm
+from carafe.forms import BoardForm, PostForm, CommentForm, LoginForm, SignupForm, ConfigForm
 from carafe.rest.api import api
 from carafe import constants
 
 # APP INIT
 app = Flask(__name__)
 app.register_blueprint(api)
-app.config.from_object(Production)
+load_config(app)
 
 db.init_app(app)
 login_manager = LoginManager()
 login_manager.anonymous_user = AnonymousUser
 login_manager.init_app(app)
+
+
+@app.before_request
+def setup_required():
+    if request.path not in ['/', '/login', '/logout'] and 'static' not in request.path and not app.config['SETUP']:
+        flash('Setup is required before Carafe can be used.')
+        return redirect(url_for('index'))
+
+
+# ERROR HANDLER
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 # HTML Response Decorator to Minimize HTML
@@ -55,10 +67,19 @@ def create_database_tables():
 
 
 # Routes
-@app.route('/')
+@app.route('/', methods=constants.METHODS)
 def index():
-    """ View that displays all instantiated boards. """
-    return render_template('index.html', boards=Board.query.filter_by(deleted=False), form=BoardForm())
+    if not app.config['SETUP']:
+        form = ConfigForm(request.form)
+        if request.method == 'POST' and form.validate():
+            app.config['SETUP'] = True
+            app.config['NAME'] = form.name.data
+            app.config['REGISTRATION_FLAG'] = form.enable_registration.data
+            update_config(app)
+            return redirect(url_for('index'))
+        return render_template('setup.html', form=form)
+    else:
+        return render_template('index.html', boards=Board.query.filter_by(deleted=False), form=BoardForm())
 
 
 @app.route('/admin/panel', methods=constants.METHODS)
@@ -106,9 +127,14 @@ def filter_posts(bid, pid):
 
 @app.route('/signup', methods=constants.METHODS)
 def sign_up():
-    if current_user.is_authenticated:
+    if not current_user.is_admin and not app.config['REGISTRATION_FLAG']:
+        flash('Sorry, user registration is disabled.')
+        return redirect(url_for('index'))
+
+    elif current_user.is_authenticated:
         flash('You are already logged in!')
         return redirect(url_for('index'))
+
     form = SignupForm(request.form)
     if request.method == 'POST' and form.validate():
         for u in User.query.all():
@@ -270,5 +296,3 @@ def revive_comment(bid, pid, cid):
         comment.deleted = False
         db.session.commit()
     return redirect(url_for('post', bid=bid, pid=pid))
-
-    

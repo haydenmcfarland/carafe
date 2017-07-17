@@ -1,3 +1,4 @@
+{% block content %}
 <ol class="breadcrumb pull-right where-am-i">
     {% if current_user.is_authenticated %}
     <li> {{ current_user.username }}</li>
@@ -10,3 +11,4 @@
     {% endif %}
 </ol>
 <div class="clearfix"></div>
+{% endblock %}

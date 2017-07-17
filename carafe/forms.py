@@ -1,4 +1,4 @@
-from wtforms import StringField, Form, PasswordField, TextAreaField, validators
+from wtforms import StringField, Form, PasswordField, TextAreaField, BooleanField, validators
 from wtforms.validators import Length, DataRequired, EqualTo
 from carafe import constants
 
@@ -28,3 +28,9 @@ class PostForm(Form):
 
 class CommentForm(Form):
     text = TextAreaField('Leave a comment:', [Length(min=constants.TEXT_MIN, max=constants.TEXT_LIMIT)])
+
+
+class ConfigForm(Form):
+    name = StringField('Carafe Board Name', [Length(min=constants.NAME_MIN, max=constants.NAME_LIMIT)])
+    enable_registration = BooleanField('Enable registration')
+
