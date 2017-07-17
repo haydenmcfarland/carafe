@@ -18,12 +18,6 @@ login_manager = LoginManager()
 login_manager.anonymous_user = AnonymousUser
 login_manager.init_app(app)
 
-#@app.before_request
-#def setup_required():
-#    if request.path not in ['/', '/login', '/logout'] and 'static' not in request.path and not app.config['SETUP']:
-#        flash('Setup is required before Carafe can be used.')
-#        return redirect(url_for('index'))
-
 
 # ERROR HANDLER
 @app.errorhandler(404)
@@ -67,15 +61,6 @@ def create_database_tables():
 # Routes
 @app.route('/', methods=constants.METHODS)
 def index():
-    #if not app.config['SETUP']:
-    #    form = ConfigForm(request.form)
-    #    if request.method == 'POST' and form.validate():
-    #        app.config['SETUP'] = True
-    #        app.config['NAME'] = form.name.data
-    #        app.config['REGISTRATION_FLAG'] = form.enable_registration.data
-    #        return redirect(url_for('index'))
-    #    return render_template('setup.html', form=form)
-    #else:
     return render_template('index.html', boards=Board.query.filter_by(deleted=False), form=BoardForm())
 
 

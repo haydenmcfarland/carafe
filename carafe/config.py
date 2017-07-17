@@ -17,4 +17,4 @@ def load_config(app):
 
     app.config['PORT'] = 8000
     app.config['SETUP'] = False
-    app.config['REGISTRATION_FLAG'] = False
+    app.config['REGISTRATION_FLAG'] = True
