@@ -7,6 +7,17 @@ from carafe import constants
 db = SQLAlchemy()
 
 
+class Config(db.Model):
+    cid = db.Column(db.Integer, primary_key=True)
+    secret_key = db.Column(db.String())
+
+    def __init__(self, secret_key):
+        self._secret_key = secret_key
+
+    def get_secret_key(self):
+        return self._secret_key
+
+
 class User(db.Model, CarafeObj):
     uid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(constants.USERNAME_LIMIT), unique=True)

@@ -1,21 +1,20 @@
 from os import environ
-
 PARAMETERS_TO_LOAD = ['LOCAL', 'SETUP', 'PORT', 'SQLALCHEMY_DATABASE_URI', 'NAME', 'REGISTRATION_FLAG',
                       'SECRET_KEY', 'DEBUG', 'SQLALCHEMY_TRACK_MODIFICATIONS']
 
 
 def load_config(app):
-    with open('config.conf') as conf:
-        for c in conf.readlines():
-            pair = tuple(i.strip() for i in c.split('='))
-            if pair[-1] in ['False', 'True']:
-                app.config[pair[0]] = (pair[-1] == 'True')
-            elif pair[0] == 'SQLALCHEMY_DATABASE_URI' and pair[-1] == 'ENVIRON':
-                app.config[pair[0]] = environ['DATABASE_URL']
-            else:
-                app.config[pair[0]] = pair[-1]
+    app.config['DEBUG'] = True
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['NAME'] = 'Carafe'
+    app.config['LOCAL'] = False
+    if app.config['LOCAL']:
+        app.config['SECRET_KEY'] = 'Not so secret key'
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/postgres'
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
+        app.config['SECRET_KEY'] = environ['SECRET_KEY']
 
-
-def update_config(app):
-    with open('config.conf', 'w') as conf:
-        conf.write('\r\n'.join('{} = {}'.format(k, app.config[k]) for k in app.config if k in PARAMETERS_TO_LOAD))
+    app.config['PORT'] = 8000
+    app.config['SETUP'] = False
+    app.config['REGISTRATION_FLAG'] = False

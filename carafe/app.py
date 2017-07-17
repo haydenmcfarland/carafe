@@ -2,9 +2,9 @@ from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_login import LoginManager, current_user, login_user, login_required, logout_user
 from htmlmin.main import minify
 from passlib.hash import sha512_crypt as sha
-from carafe.config import load_config, update_config
+from carafe.config import load_config
 from carafe.classes.login import AnonymousUser
-from carafe.database.model import Board, Post, Comment, User, db
+from carafe.database.model import Board, Post, Comment, User, Config, db
 from carafe.forms import BoardForm, PostForm, CommentForm, LoginForm, SignupForm, ConfigForm
 from carafe.rest.api import api
 from carafe import constants
@@ -13,18 +13,16 @@ from carafe import constants
 app = Flask(__name__)
 app.register_blueprint(api)
 load_config(app)
-
 db.init_app(app)
 login_manager = LoginManager()
 login_manager.anonymous_user = AnonymousUser
 login_manager.init_app(app)
 
-
-@app.before_request
-def setup_required():
-    if request.path not in ['/', '/login', '/logout'] and 'static' not in request.path and not app.config['SETUP']:
-        flash('Setup is required before Carafe can be used.')
-        return redirect(url_for('index'))
+#@app.before_request
+#def setup_required():
+#    if request.path not in ['/', '/login', '/logout'] and 'static' not in request.path and not app.config['SETUP']:
+#        flash('Setup is required before Carafe can be used.')
+#        return redirect(url_for('index'))
 
 
 # ERROR HANDLER
@@ -69,17 +67,16 @@ def create_database_tables():
 # Routes
 @app.route('/', methods=constants.METHODS)
 def index():
-    if not app.config['SETUP']:
-        form = ConfigForm(request.form)
-        if request.method == 'POST' and form.validate():
-            app.config['SETUP'] = True
-            app.config['NAME'] = form.name.data
-            app.config['REGISTRATION_FLAG'] = form.enable_registration.data
-            update_config(app)
-            return redirect(url_for('index'))
-        return render_template('setup.html', form=form)
-    else:
-        return render_template('index.html', boards=Board.query.filter_by(deleted=False), form=BoardForm())
+    #if not app.config['SETUP']:
+    #    form = ConfigForm(request.form)
+    #    if request.method == 'POST' and form.validate():
+    #        app.config['SETUP'] = True
+    #        app.config['NAME'] = form.name.data
+    #        app.config['REGISTRATION_FLAG'] = form.enable_registration.data
+    #        return redirect(url_for('index'))
+    #    return render_template('setup.html', form=form)
+    #else:
+    return render_template('index.html', boards=Board.query.filter_by(deleted=False), form=BoardForm())
 
 
 @app.route('/admin/panel', methods=constants.METHODS)
