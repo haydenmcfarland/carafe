@@ -1,6 +1,4 @@
 from os import environ
-PARAMETERS_TO_LOAD = ['LOCAL', 'SETUP', 'PORT', 'SQLALCHEMY_DATABASE_URI', 'NAME', 'REGISTRATION_FLAG',
-                      'SECRET_KEY', 'DEBUG', 'SQLALCHEMY_TRACK_MODIFICATIONS']
 
 
 def load_config(app):
