@@ -4,7 +4,7 @@ from htmlmin.main import minify
 from passlib.hash import sha512_crypt as sha
 from carafe.config import load_config
 from carafe.classes.login import AnonymousUser
-from carafe.database.model import Board, Post, Comment, User, Config, db
+from carafe.database.model import Board, Post, Comment, User, db
 from carafe.forms import BoardForm, PostForm, CommentForm, LoginForm, SignupForm
 from carafe.rest.api import api
 from carafe import constants
