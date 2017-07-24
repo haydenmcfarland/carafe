@@ -1,7 +1,7 @@
 {% block content %}
 <div>
     {% from "form/_formhelpers.html" import render_field %}
-    <form method=post>
+    <form method="post">
         <dl>
             <h5>Enable Registration: </h5>{{render_field(form.enable_registration)}}
             {{render_field(form.name, size=50, maxlength=80, placeholder="Board Name") }}

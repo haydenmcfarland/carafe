@@ -19,3 +19,6 @@ METHODS = ['GET', 'POST']
 
 # CONFIG
 DEFAULT_CONFIG = 0
+
+# ERRORS
+DEFAULT_SUBMISSION_ERR = 'Something went wrong. Check your submission for errors.'

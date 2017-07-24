@@ -26,10 +26,12 @@
             </button>
             {% endif %}
         </div>
-        <div class="post-header">
-            <h3>{{p.name}}</h3>
-            <br><small>by {{p.get_username()}} | {{p.get_date_str()}}</small></h3>
-        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 post-header">
+    <h3>{{p.name}}</h3>
+    <p><small>by {{p.get_username()}} | {{p.get_date_str()}}</small></p>
     </div>
 </div>
 <div class="row row-striped">
@@ -58,7 +60,7 @@
         <h3>{{c.get_username()}}</h3>
                 {% if current_user.is_admin and c.deleted %}
                     <a href="{{ url_for('revive_comment', bid=bid, pid=c.pid, cid=c.cid) }}" class="btn btn-info pull-right" role="button"><i class="fa fa-eye"></i></a>
-                {% elif current_user.uid == c.uid and not c.deleted %}
+                {% elif (current_user.uid == c.uid or current_user.is_admin) and not c.deleted %}
                     <a href="{{ url_for('delete_comment', bid=bid, pid=c.pid, cid=c.cid) }}" class="btn btn-danger pull-right" role="button"><i class="fa fa-eye-slash"></i></a>
                 {% endif %}
 
