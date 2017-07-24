@@ -3,7 +3,7 @@ from flask_login import LoginManager, current_user, login_user, login_required, 
 from htmlmin.main import minify
 from passlib.hash import sha512_crypt as sha
 from carafe.config import load_config
-from carafe.classes.login import AnonymousUser
+from carafe.extensions.login import AnonymousUser
 from carafe.database.model import Board, Post, Comment, User, db
 from carafe.forms import BoardForm, PostForm, CommentForm, LoginForm, SignupForm
 from carafe.rest.api import api
@@ -89,22 +89,8 @@ def post(bid, pid):
     if p.deleted:
         flash('The post you are trying to access has been deleted.')
         return redirect(url_for('board', bid=bid))
-    """ View that displays the post specified by the provided pid. """
-    return render_template('post.html', p=p, bid=bid,
-                           comments=sorted(Comment.query.filter_by(pid=pid), key=lambda x: x.date),
-                           pform=PostForm(), cform=CommentForm())
-
-
-@app.route('/board/<bid>/post/<pid>', methods=constants.METHODS)
-def filter_posts(bid, pid):
-    p = Post.query.get(pid)
-    if p.deleted:
-        flash('The post you are trying to access has been deleted.')
-        return redirect(url_for('board', bid=bid))
-    """ View that displays the post specified by the provided pid. """
-    return render_template('post.html', p=p, bid=bid,
-                           comments=sorted(Comment.query.filter_by(pid=pid), key=lambda x: x.date),
-                           pform=PostForm(), cform=CommentForm())
+    comments = sorted(Comment.query.filter_by(pid=pid), key=lambda x: x.date)
+    return render_template('post.html', p=p, bid=bid, comments=comments, pform=PostForm(), cform=CommentForm())
 
 
 @app.route('/signup', methods=constants.METHODS)
@@ -133,7 +119,7 @@ def sign_up():
 
 @app.route("/login", methods=constants.METHODS)
 def login():
-    """ Logs in user if proper  parameters are entered and creates a session for that user. """
+    """ Logs in user if proper parameters are entered and creates a session for that user. """
     if current_user.is_authenticated:
         flash('You are already logged in!')
         return redirect(url_for('index'))
@@ -155,7 +141,7 @@ def logout():
     """ Logs out user and redirects to front page. """
     logout_user()
     flash('Successfully logged out.')
-    return redirect(url_for('index'))
+    return redirect(request.referrer)
 
 
 @app.route('/board/create', methods=constants.METHODS)
@@ -177,13 +163,16 @@ def edit_board(bid):
     """ Allows the editing of a board with the provided bid. """
     form = BoardForm(request.form)
     b = Board.query.get(bid)
-    if current_user.is_admin and request.method == 'POST' and form.validate():
-        b.name = form.name.data
-        b.desc = form.desc.data
-        db.session.commit()
-        flash('Board ({}) successfully edited!'.format(form.name.data))
-
-    return redirect(url_for('index'))
+    if current_user.is_admin and request.method == 'POST':
+        if form.validate():
+            if b.name != form.name.data or b.desc != form.desc.data:
+                b.name = form.name.data
+                b.desc = form.desc.data
+                db.session.commit()
+                flash('Board ({}) successfully edited!'.format(form.name.data))
+        else:
+            flash(constants.DEFAULT_SUBMISSION_ERR)
+    return redirect(request.referrer)
 
 
 @app.route('/board/<bid>/delete')
@@ -193,7 +182,7 @@ def delete_board(bid):
     if current_user.is_admin:
         Board.query.get(bid).deleted = True
         db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(request.referrer)
 
 
 # POST VIEWS
@@ -202,11 +191,14 @@ def delete_board(bid):
 def create_post(bid):
     """ Allows the creation of a post as long as parameters are met and the user is in an active session. """
     form = PostForm(request.form)
-    if request.method == 'POST' and form.validate():
-        db.session.add(Post(bid, current_user.uid, form.name.data, form.desc.data))
-        db.session.commit()
-        flash('Post ({}) successfully created!'.format(form.name.data))
-    return redirect(url_for('board', bid=bid))
+    if request.method == 'POST':
+        if form.validate():
+            db.session.add(Post(bid, current_user.uid, form.name.data, form.desc.data))
+            db.session.commit()
+            flash('Post ({}) successfully created!'.format(form.name.data))
+        else:
+            flash(constants.DEFAULT_SUBMISSION_ERR)
+    return redirect(request.referrer)
 
 
 @app.route('/board/<bid>/post/<pid>/edit', methods=constants.METHODS)
@@ -215,13 +207,17 @@ def edit_post(bid, pid):
     """ Allows the editing of a post as long as the active user is the post creator or Admin. """
     p = Post.query.get(pid)
     form = PostForm(request.form)
-    if current_user.uid == p.uid or current_user.is_admin:
-        og_name = p.name
-        p.name = form.name.data
-        p.text = form.desc.data
-        db.session.commit()
-        flash('Post ({}) successfully edited!'.format(og_name))
-    return redirect(url_for('board', bid=bid))
+    if request.method == 'POST' and current_user.uid == p.uid:
+        if form.validate():
+            if p.name != form.name.data or p.text != form.desc.data:
+                og_name = p.name
+                p.name = form.name.data
+                p.text = form.desc.data
+                db.session.commit()
+                flash('Post ({}) successfully edited!'.format(og_name))
+        else:
+            flash(constants.DEFAULT_SUBMISSION_ERR)
+    return redirect(request.referrer)
 
 
 @app.route('/board/<bid>/post/<pid>/delete')
@@ -231,7 +227,7 @@ def delete_post(bid, pid):
     if current_user.is_admin or current_user == Post.query.get(int(pid)).uid:
         Post.query.get(pid).deleted = True
         db.session.commit()
-    return redirect(url_for('board', bid=bid))
+    return redirect(request.referrer)
 
 
 # COMMENT VIEWS
@@ -240,10 +236,14 @@ def delete_post(bid, pid):
 def create_comment(bid, pid):
     """ Allows for the creation of a comment by an active user. """
     form = CommentForm(request.form)
-    if request.method == 'POST' and form.validate():
-        db.session.add(Comment(pid, current_user.uid, form.text.data))
-        db.session.commit()
-    return redirect(url_for('post', bid=bid, pid=pid))
+    if request.method == 'POST':
+        if form.validate():
+            db.session.add(Comment(pid, current_user.uid, form.text.data))
+            db.session.commit()
+            flash('Comment successfully created!')
+        else:
+            flash(constants.DEFAULT_SUBMISSION_ERR)
+    return redirect(request.referrer)
 
 
 @app.route('/board/<bid>/post/<pid>/comment/<cid>/edit', methods=constants.METHODS)
@@ -252,11 +252,15 @@ def edit_comment(bid, pid, cid):
     """ Allows the editing of a post as long as the active user is the post creator or Admin. """
     c = Comment.query.get(cid)
     form = CommentForm(request.form)
-    if current_user.uid == c.uid:
-        c.text = form.text.data
-        db.session.commit()
-        flash('Comment successfully edited!')
-    return redirect(url_for('post', bid=bid, pid=pid))
+    if request.method == 'POST' and current_user.uid == c.uid:
+        if form.validate():
+            if c.text != form.text.data:
+                c.text = form.text.data
+                db.session.commit()
+                flash('Comment successfully edited!')
+        else:
+            flash(constants.DEFAULT_SUBMISSION_ERR)
+    return redirect(request.referrer)
 
 
 @app.route('/board/<bid>/post/<pid>/comment/<cid>/delete')
@@ -267,7 +271,7 @@ def delete_comment(bid, pid, cid):
     if current_user.is_admin or current_user.uid == comment.uid:
         comment.deleted = True
         db.session.commit()
-    return redirect(url_for('post', bid=bid, pid=pid))
+    return redirect(request.referrer)
 
 
 @app.route('/board/<bid>/post/<pid>/comment/<cid>/revive')
@@ -277,4 +281,4 @@ def revive_comment(bid, pid, cid):
     if current_user.is_admin:
         comment.deleted = False
         db.session.commit()
-    return redirect(url_for('post', bid=bid, pid=pid))
+    return redirect(request.referrer)

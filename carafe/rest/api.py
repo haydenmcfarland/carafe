@@ -19,7 +19,6 @@ def api_boards():
     return jsonify(boards=[_dict_gen(bid=b.bid, desc=b.desc, name=b.name) for b in boards])
 
 
-# TODO: make this work of course; working on other things
 @api.route('/api/board/<bid>/posts/', methods=['GET'])
 def api_posts_by_bid(bid):
     post_range = request.args.get('post_range')
@@ -32,7 +31,6 @@ def api_posts_by_bid(bid):
                 start, end = post_range[0], post_range[-1]
         except:
             message = "Invalid post_range parameter."
-    recent_date = lambda x : x.recent_date()
     posts = Post.query.filter_by(bid=bid, deleted=False)
-    posts = sorted(posts, key=recent_date, )
+    posts = sorted(posts, key=lambda x : x.recent_date())
     return jsonify(posts=[_dict_gen(pid=p.pid, user=p.get_username(), name=p.name, text=p.text) for p in posts])

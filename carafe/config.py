@@ -5,7 +5,7 @@ def load_config(app):
     app.config['DEBUG'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['NAME'] = 'Carafe'
-    app.config['LOCAL'] = True
+    app.config['LOCAL'] = False
     if app.config['LOCAL']:
         app.config['SECRET_KEY'] = 'Not so secret key'
         app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/postgres'
