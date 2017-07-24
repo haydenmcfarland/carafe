@@ -1,7 +1,7 @@
 {% block content %}
 <div>
     {% from "form/_formhelpers.html" import render_field %}
-    <form method=post action="{{ url_for('edit_board', bid=b.bid) }}">
+    <form method="post" action="{{ url_for('edit_board', bid=b.bid) }}">
         <dl>
             {{ render_field(form.name, size=50, maxlength=80, value=b.name) }}
             {{ render_field(form.desc, rows=3, cols=50, maxlength=1024) }}

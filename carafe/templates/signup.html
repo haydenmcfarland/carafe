@@ -5,7 +5,7 @@
 				<div>
 					<h3>Register to start posting!</h3><br><br>
                     {% from "form/_formhelpers.html" import render_field %}
-                    <form method=post>
+                    <form method="post">
                       <dl>
                         {{ render_field(form.username, placeholder='Username') }}
                         {{ render_field(form.email, placeholder='example@gmail.com') }}

@@ -1,7 +1,7 @@
 {% block content %}
 <div>
 	{% from "form/_formhelpers.html" import render_field %}
-	<form method=post action="{{ url_for('create_comment', bid=p.bid, pid=p.pid)}}">
+	<form method="post" action="{{ url_for('create_comment', bid=p.bid, pid=p.pid)}}">
 		<dl>
 			{{render_field(cform.text, rows=3, cols=50, maxlength=1024, placeholder="Markdown supported.")}}
 			<input class="btn btn-primary" type=submit value=Submit>
