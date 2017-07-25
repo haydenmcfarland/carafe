@@ -182,6 +182,7 @@ def delete_board(bid):
     if current_user.is_admin:
         Board.query.get(bid).deleted = True
         db.session.commit()
+        flash('Board {} is no longer viewable.'.format(bid))
     return redirect(request.referrer)
 
 
@@ -281,4 +282,30 @@ def revive_comment(bid, pid, cid):
     if current_user.is_admin:
         comment.deleted = False
         db.session.commit()
+    return redirect(request.referrer)
+
+
+@app.route('/admin/board/<bid>/erase')
+@login_required
+def erase_board(bid):
+    if current_user.is_admin:
+        db.session.delete(Board.query.get(bid))
+        db.session.commit()
+        msg = 'Board {} permanently removed from database. All associated posts and comments have also been removed.'
+        flash(msg.format(bid))
+    else:
+        flash(constants.DEFAULT_SUBMISSION_ERR)
+    return redirect(request.referrer)
+
+
+@app.route('/admin/board/<bid>/revive')
+@login_required
+def revive_board(bid):
+    if current_user.is_admin:
+        Board.query.get(bid).deleted = False
+        db.session.commit()
+        msg = 'Board {} is now visible again.'
+        flash(msg.format(bid))
+    else:
+        flash(constants.DEFAULT_SUBMISSION_ERR)
     return redirect(request.referrer)

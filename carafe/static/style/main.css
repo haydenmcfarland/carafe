@@ -9,6 +9,7 @@
     margin-top: 0;
 }
 .page-footer {
+    margin-top: 21px;
     margin-bottom: 0;
 }
 .header-margin {
@@ -51,11 +52,15 @@ h3 {
     padding: 15px;
     word-wrap: break-word;
 }
-
+div.col-striped:nth-of-type(odd){
+  background-color: #f9f9f9;
+}
+div.col-striped:nth-of-type(even){
+  background-color: #fff;
+}
 iframe {
     max-width: 100%;
 }
-
 img {
 max-width: 100%;
 }
