@@ -14,24 +14,20 @@
 <div class="row row-border">
     <div class="col-md-12">
         <div>
-            <a href="{{ url_for('board', bid = bid) }}"  class="btn btn-info" role="button">
-                <i class="fa fa-chevron-circle-left"></i>
-            </a>
-            <a class="btn btn-default" href="\">
-                <i class="fa fa-home"></i>
-            </a>
+            <a href="{{ url_for('board', bid = bid) }}" role="button"><i class="fa fa-chevron-circle-left fa-2x"></i></a>
+            <a href="\"><i class="fa fa-home fa-2x"></i></a>
             {% if current_user == p.uid or current_user.is_admin %}
-            <button data-toggle="collapse" data-target="#p_{{p.pid}}" class="btn btn-success" role="button">
-                <i class="fa fa-edit"></i>
-            </button>
+            <a class="text-success" data-toggle="collapse" data-target="#p_{{p.pid}}" role="button"><i class="fa fa-edit fa-2x"></i></a>
             {% endif %}
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12 post-header">
-    <h3>{{p.name}}</h3>
-    <p><small>by {{p.get_username()}} | {{p.get_date_str()}}</small></p>
+        <h3>{{p.name}}</h3>
+        <img style="padding-bottom: 15px;" class="pull-right" src="{{url_for('static', filename='img/defaultuser.png')}}"/>
+        <p><small>by {{p.get_username()}} | {{p.get_date_str()}}</small></p>
+
     </div>
 </div>
 <div class="row row-striped">
@@ -45,9 +41,7 @@
 <div class="row row-striped">
     <div class="col-xs-12 col-md-6">
 
-        <button data-toggle="collapse" data-target="#createcomment" class="btn btn-info" role="button">
-            <i class="fa fa-comment"></i>
-        </button>
+        <a data-toggle="collapse" data-target="#createcomment" role="button"><i class="fa fa-comment fa-2x"></i></a>
         <div id="createcomment" class="collapse">{% include 'form/createcomment_form.html' %}</div>
     </div>
 </div>
@@ -58,19 +52,18 @@
     <div class="col-md-3 col-user">
 
         <h3>{{c.get_username()}}</h3>
+                {% if current_user.uid == c.uid and not c.deleted %}
+                <a class="white" data-toggle="collapse" data-target="#c_{{c.cid}}" role="button"><i class="fa fa-edit fa-lg"></i></a>
+                {% endif %}
                 {% if current_user.is_admin and c.deleted %}
                     <a href="{{ url_for('revive_comment', bid=bid, pid=c.pid, cid=c.cid) }}" class="btn btn-info pull-right" role="button"><i class="fa fa-eye"></i></a>
                 {% elif (current_user.uid == c.uid or current_user.is_admin) and not c.deleted %}
                     <a href="{{ url_for('delete_comment', bid=bid, pid=c.pid, cid=c.cid) }}" class="btn btn-danger pull-right" role="button"><i class="fa fa-eye-slash"></i></a>
                 {% endif %}
-
         <br><small>{{c.get_date_str()}}</small>
     </div>
     <div class="col-md-9">
         {% if current_user.uid == c.uid and not c.deleted %}
-        <button data-toggle="collapse" data-target="#c_{{c.cid}}" class="btn btn-success" role="button">
-            <i class="fa fa-edit"></i>
-        </button>
         <div id="c_{{c.cid}}" class="collapse">
             {% with cform = c.get_edit_form() %}
             {% include 'form/editcomment_form.html' %}

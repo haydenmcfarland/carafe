@@ -3,6 +3,7 @@ from datetime import datetime
 from carafe.forms import BoardForm, PostForm, CommentForm
 from carafe.database.base import CarafeObj, UserContent
 from carafe import constants
+from sqlalchemy import desc
 
 db = SQLAlchemy()
 
@@ -80,14 +81,14 @@ class Post(db.Model, CarafeObj, UserContent):
         return Comment.query.filter_by(pid=self.id).count()
 
     def get_latest_comment_info(self):
-        comment = Comment.query.filter_by(pid=self.id).order_by('date desc').first()
+        comment = Comment.query.filter_by(pid=self.id).order_by(desc(Comment.date)).first()
         if comment:
             return comment.get_date_str()
         else:
             return 'None'
 
     def recent_date(self):
-        comment = Comment.query.filter_by(pid=self.id).order_by('date desc').first()
+        comment = Comment.query.filter_by(pid=self.id).order_by(desc(Comment.date)).first()
         if comment:
             return comment.date
         else:

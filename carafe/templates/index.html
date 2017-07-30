@@ -12,30 +12,26 @@
 <div class="row row-border">
     <div class="col-xs-12 col-sm-6 col-md-6">
         <div>
-            <div class="btn btn-default nohover">
-                <i class="fa fa-home"></i>
-            </div>
+            <i class="fa fa-home fa-2x"></i>
             {% if current_user.is_admin %}
-            <button data-toggle="collapse" data-target="#createboard" class="btn btn-info" role="button">
-                <i class="fa fa-plus-square"></i>
-            </button>
+            <a data-toggle="collapse" data-target="#createboard" role="button"><i class="fa fa-plus-square fa-2x"></i></a>
             {% endif %}
-            <h3 class="header-margin">Boards</h3>
         </div>
     </div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><i class="fa fa-pencil-square-o fa-lg"></i></div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><i class="fa fa-clock-o fa-lg"></i></div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><i class="fa fa-user fa-lg"></i></div>
+    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>Posts</h4></div>
+    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>Recent</h4></div>
+    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>User</h4></div>
 </div>
 {% for b in boards %}
 <div class="row row-striped">
     <div class="col-xs-12 col-sm-6 col-md-6">
         <div>
-            {% if current_user.is_admin %}
-            <button data-toggle="collapse" data-target="#b_{{b.bid}}" class="btn btn-success" role="button"><i class="fa fa-pencil-square-o"></i></button>
-            <a href="{{url_for('delete_board', bid = b.bid)}}" class="btn btn-danger" role="button"><i class="fa fa-trash-o"></i></a>
-            {% endif %}
             <a href="{{url_for('board', bid = b.bid)}}" class="btn btn-primary" role="button">{{b.name}}</a>
+            <br><br>
+            {% if current_user.is_admin %}
+            <a class="text-success" data-toggle="collapse" data-target="#b_{{b.bid}}" role="button"><i class="fa fa-pencil-square-o fa-lg"></i></a>
+            <a class="text-warning" href="{{url_for('delete_board', bid = b.bid)}}" class="btn btn-danger" role="button"><i class="fa fa-trash-o fa-lg"></i></a>
+            {% endif %}
         </div>
         <br><p>{{b.desc}}</p>
         {% if current_user.is_admin %}
@@ -51,15 +47,16 @@
     </div>
     <div class="hidden-xs col-sm-2 col-md-2 text-center">
          {% if  b.get_recent_post() != None %}
-        <a href="/board/{{b.bid}}/post/{{b.get_recent_post().pid}}">{{b.get_recent_post().name[0:25]}}</a>
+        <a href="/board/{{b.bid}}/post/{{b.get_recent_post().pid}}">{{b.get_recent_post().name[0:15]}}</a>
         {% else %}
         <span class="fa fa-minus"></span>
         {% endif %}
     </div>
     <div class="hidden-xs col-sm-2 col-md-2 text-center">
         {% if b.get_recent_post()!= None %}
-        {{b.get_recent_post().get_username()}}
-        <br><small><i class="fa fa-clock-o"></i> <i>{{b.get_recent_post().get_date_str()}}</i></small></td>
+        <b>{{b.get_recent_post().get_username()}}</b>
+        <br><img src="{{url_for('static', filename='img/defaultuser.png')}}" />
+        <br><small><i>{{b.get_recent_post().get_date_str()}}</i></small></td>
         {% else %}
         <span class="fa fa-minus"></span>
         {% endif %}

@@ -12,34 +12,28 @@
 <div class="row row-border">
     <div class="col-xs-12 col-sm-6 col-md-6">
         <div>
-            <a href="{{ url_for('index') }}"  class="btn btn-info" role="button">
-                <i class="fa fa-chevron-circle-left"></i>
-            </a>
-            <a class="btn btn-default" href="\">
-                <i class="fa fa-home"></i>
-            </a>
+            <a href="{{ url_for('index') }}" role="button"><i class="fa fa-chevron-circle-left fa-2x"></i></a>
+            <a href="\"><i class="fa fa-home fa-2x"></i></a>
             {% if current_user.is_authenticated %}
-            <button data-toggle="collapse" data-target="#createpost" class="btn btn-info" role="button">
-                <i class="fa fa-plus-square"></i>
-            </button>
+            <a data-toggle="collapse" data-target="#createpost" role="button"><i class="fa fa-plus-square fa-2x"></i></a>
             {% endif %}
             <h3 class="header-margin">{{b.name}}</h3>
         </div>
-
     </div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><i class="fa fa-user fa-lg"></i></div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><i class="fa fa-comment fa-lg"></i></div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><i class="fa fa-clock-o fa-lg"></i></div>
+    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>User</h4></div>
+    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>Comments</h4></div>
+    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>Activity</h4></div>
 </div>
 {% for p in posts %}
 <div class="row row-striped">
     <div class="col-xs-12 col-sm-6 col-md-6">
         <div>
+            <a class="btn btn-primary" href="{{ url_for('post', bid = b.bid, pid = p.pid) }}" role="button">{{ p.name }}</a>
             {% if current_user.uid == p.uid or current_user.is_admin %}
-            <button data-toggle="collapse" data-target="#p_{{p.pid}}" class="btn btn-success" role="button"><span class="fa fa-edit"></span></button>
-            <a href="{{url_for('delete_post', bid = b.bid, pid=p.pid)}}" class="btn btn-danger" role="button"><span class="fa fa-trash"></span></a>
+            <br><br>
+            <a class="text-success" data-toggle="collapse" data-target="#p_{{p.pid}}" role="button"><span class="fa fa-edit fa-lg"></span></a>
+            <a class="text-warning" href="{{url_for('delete_post', bid = b.bid, pid=p.pid)}}" role="button"><span class="fa fa-trash-o fa-lg"></span></a>
             {% endif %}
-            <a href="{{ url_for('post', bid = b.bid, pid = p.pid) }}" class="btn btn-primary" role="button">{{ p.name }}</a>
             <br><br><p>{{ p.clean_text | truncate(128) }} </p>
         </div>
         {% if current_user.uid == p.uid or current_user.is_admin %}
@@ -51,13 +45,14 @@
         {% endif %}
     </div>
     <div class="hidden-xs col-sm-2 col-md-2 text-center">
-        {{p.get_username()}}
+        <b>{{p.get_username()}}</b>
+        <br><img src="{{url_for('static', filename='img/defaultuser.png')}}" />
     </div>
     <div class="hidden-xs col-sm-2 col-md-2 text-center">
         {{p.get_comment_count()}}
     </div>
     <div class="hidden-xs col-sm-2 col-md-2 text-center">
-        {{p.get_latest_comment_info()}}
+        <small></i> <i>{{p.get_latest_comment_info()}}</i></small></td>
     </div>
 </div>
 {% endfor %}

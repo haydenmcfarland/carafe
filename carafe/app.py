@@ -8,6 +8,7 @@ from carafe.database.model import Board, Post, Comment, User, db
 from carafe.forms import BoardForm, PostForm, CommentForm, LoginForm, SignupForm
 from carafe.rest.api import api
 from carafe import constants
+from sqlalchemy import desc, asc
 
 # APP INIT
 app = Flask(__name__)
@@ -77,10 +78,9 @@ def panel():
 def board(bid):
     """ View that displays the post of the board specified by the provided bid. """
     form = PostForm(request.form)
-    posts = Post.query.filter_by(bid=bid, deleted=False)
+    posts = Post.query.filter_by(bid=bid, deleted=False).outerjoin(Comment).order_by(desc(Post.date))
     b = Board.query.get(bid)
-    return render_template('posts.html', posts=sorted(posts, key=lambda x: x.recent_date(), reverse=True),
-                           b=b, pform=form)
+    return render_template('posts.html', posts=posts, b=b, pform=form)
 
 
 @app.route('/board/<bid>/post/<pid>', methods=constants.METHODS)
@@ -89,7 +89,7 @@ def post(bid, pid):
     if p.deleted:
         flash('The post you are trying to access has been deleted.')
         return redirect(url_for('board', bid=bid))
-    comments = sorted(Comment.query.filter_by(pid=pid), key=lambda x: x.date)
+    comments = Comment.query.filter_by(pid=pid).order_by(asc(Comment.date))
     return render_template('post.html', p=p, bid=bid, comments=comments, pform=PostForm(), cform=CommentForm())
 
 
