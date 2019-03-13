@@ -1,7 +1,4 @@
-# Carafe 
-
-## Heroku
-[Live Preview](http://carafeboard.herokuapp.com)
+# Carafe (Flask Test Project)
 
 ## Summary:
 
@@ -13,17 +10,7 @@ Carafe is an online message board written in Python. Carafe utilizes the Flask f
 - Users, Boards, Posts, Comments
 - Markdown Support
 
-#### WIP
-- Administrative Panel
-- Email User Confirmation
-- Other QoL Features
-- JSON API
-
-## Purpose:
-
-Carafe is meant to be used as a 'pop-up' message board. It is to be used for team projects, courses, or events.
-
-## How to use (as-is):
+## Deployment
 
 1. Download the project from Github.
 2. Edit ```config.py``` in the carafe folder.
@@ -31,7 +18,3 @@ Carafe is meant to be used as a 'pop-up' message board. It is to be used for tea
 4. Attach the PostgreSQL database plugin from Heroku.
 5. Create a ```SECRET_KEY``` environment variable on the Heroku dashboard.
 6. Restart the dyno and enjoy.
-
-## Progress:
-
-This project is just something I work on when I have a little bit of spare time. A lot of progress could be made if my attention wasn't directed towards other projects. Updates will be random.
