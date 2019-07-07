@@ -1,0 +1,3 @@
+# ignore virtual env
+/env
+*.pyc

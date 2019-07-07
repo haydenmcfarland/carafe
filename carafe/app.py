@@ -15,10 +15,10 @@ app = Flask(__name__)
 app.register_blueprint(api)
 load_config(app)
 db.init_app(app)
+db.app = app
 login_manager = LoginManager()
 login_manager.anonymous_user = AnonymousUser
 login_manager.init_app(app)
-
 
 # ERROR HANDLER
 @app.errorhandler(404)
