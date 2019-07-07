@@ -20,4 +20,4 @@ Carafe is an online message board written in Python. Carafe utilizes the Flask f
 6. Restart the dyno and enjoy.
 
 
-[example](https://cafeboard.herokuapp.com)
+[example](https://carafeboard.herokuapp.com)
