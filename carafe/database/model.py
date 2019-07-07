@@ -3,8 +3,7 @@ from datetime import datetime
 from carafe.forms import BoardForm, PostForm, CommentForm
 from carafe.database.base import CarafeObj, UserContent
 from carafe import constants
-from sqlalchemy import desc
-
+from sqlalchemy import text
 db = SQLAlchemy()
 
 class User(db.Model, CarafeObj):
@@ -43,7 +42,7 @@ class Board(db.Model, CarafeObj):
         self.deleted = False
 
     def get_recent_post(self):
-        return Post.query.filter_by(bid=self.id).order_by('date desc').first()
+        return Post.query.filter_by(bid=self.id).order_by(text('date desc')).first()
 
     def get_post_count(self):
         return Post.query.filter_by(bid=self.id).count()
@@ -81,14 +80,14 @@ class Post(db.Model, CarafeObj, UserContent):
         return Comment.query.filter_by(pid=self.id).count()
 
     def get_latest_comment_info(self):
-        comment = Comment.query.filter_by(pid=self.id).order_by(desc(Comment.date)).first()
+        comment = Comment.query.filter_by(pid=self.id).order_by(text("date desc")).first()
         if comment:
             return comment.get_date_str()
         else:
             return 'None'
 
     def recent_date(self):
-        comment = Comment.query.filter_by(pid=self.id).order_by(desc(Comment.date)).first()
+        comment = Comment.query.filter_by(pid=self.id).order_by(text("date desc")).first()
         if comment:
             return comment.date
         else:
@@ -128,4 +127,3 @@ class Comment(db.Model, CarafeObj, UserContent):
 
     def get_username(self):
         return User.query.get(self.uid).username
-
