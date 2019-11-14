@@ -1,3 +1,2 @@
-# ignore virtual env
-/env
 *.pyc
+.venv
