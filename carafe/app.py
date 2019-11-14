@@ -62,14 +62,23 @@ def create_database_tables():
 # Routes
 @app.route('/', methods=constants.METHODS)
 def index():
-    return render_template('index.html', boards=Board.query.filter_by(deleted=False), form=BoardForm())
+    return render_template(
+        'index.html',
+        boards=Board.query.filter_by(
+            deleted=False),
+        form=BoardForm())
 
 
 @app.route('/admin/panel', methods=constants.METHODS)
 @login_required
 def panel():
     if current_user.is_admin:
-        return render_template('panel.html', User=User, Post=Post, Comment=Comment, Board=Board)
+        return render_template(
+            'panel.html',
+            User=User,
+            Post=Post,
+            Comment=Comment,
+            Board=Board)
     else:
         return redirect(url_for('index'))
 
@@ -78,7 +87,9 @@ def panel():
 def board(bid):
     """ View that displays the post of the board specified by the provided bid. """
     form = PostForm(request.form)
-    posts = Post.query.filter_by(bid=bid, deleted=False).outerjoin(Comment).order_by(text("comment.date desc"))
+    posts = Post.query.filter_by(
+        bid=bid, deleted=False).outerjoin(Comment).order_by(
+        text("comment.date desc"))
     b = Board.query.get(bid)
     return render_template('posts.html', posts=posts, b=b, pform=form)
 
@@ -90,7 +101,13 @@ def post(bid, pid):
         flash('The post you are trying to access has been deleted.')
         return redirect(url_for('board', bid=bid))
     comments = Comment.query.filter_by(pid=pid).order_by(text("date asc"))
-    return render_template('post.html', p=p, bid=bid, comments=comments, pform=PostForm(), cform=CommentForm())
+    return render_template(
+        'post.html',
+        p=p,
+        bid=bid,
+        comments=comments,
+        pform=PostForm(),
+        cform=CommentForm())
 
 
 @app.route('/signup', methods=constants.METHODS)
@@ -109,7 +126,11 @@ def sign_up():
             if u.username == form.username.data.lower() or u.email == form.email.data.lower():
                 flash('Username or email is already taken.')
                 return render_template('signup.html', form=form)
-        user = User(form.username.data.lower(), form.email.data.lower(), sha.encrypt(form.password.data))
+        user = User(
+            form.username.data.lower(),
+            form.email.data.lower(),
+            sha.encrypt(
+                form.password.data))
         db.session.add(user)
         db.session.commit()
         flash('Thanks for registering, {}!'.format(user.username))
@@ -125,7 +146,8 @@ def login():
         return redirect(url_for('index'))
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
-        user = User.query.filter_by(username=form.username.data.lower()).first()
+        user = User.query.filter_by(
+            username=form.username.data.lower()).first()
         if user and sha.verify(form.password.data, user.password):
             login_user(user)
             flash('You are logged in as {}!'.format(user.username))
@@ -149,13 +171,18 @@ def create_board():
     """ Creates board if form parameters meet requirements. """
     form = BoardForm(request.form)
     if current_user.is_admin and request.method == 'POST' and form.validate():
-        if form.name.data.lower() not in [b.name.lower() for b in Board.query.all()]:
+        if form.name.data.lower() not in [
+                b.name.lower() for b in Board.query.all()]:
             db.session.add(Board(form.name.data, form.desc.data))
             db.session.commit()
             flash('Board ({}) successfully created!'.format(form.name.data))
         else:
             flash('Duplicate board detected.'.format(form.name.data))
-    return render_template('index.html', boards=Board.query.filter_by(deleted=False), form=form)
+    return render_template(
+        'index.html',
+        boards=Board.query.filter_by(
+            deleted=False),
+        form=form)
 
 
 @app.route('/board/edit/<bid>', methods=constants.METHODS)
@@ -194,7 +221,12 @@ def create_post(bid):
     form = PostForm(request.form)
     if request.method == 'POST':
         if form.validate():
-            db.session.add(Post(bid, current_user.uid, form.name.data, form.desc.data))
+            db.session.add(
+                Post(
+                    bid,
+                    current_user.uid,
+                    form.name.data,
+                    form.desc.data))
             db.session.commit()
             flash('Post ({}) successfully created!'.format(form.name.data))
         else:
@@ -247,7 +279,9 @@ def create_comment(bid, pid):
     return redirect(request.referrer)
 
 
-@app.route('/board/<bid>/post/<pid>/comment/<cid>/edit', methods=constants.METHODS)
+@app.route(
+    '/board/<bid>/post/<pid>/comment/<cid>/edit',
+    methods=constants.METHODS)
 @login_required
 def edit_comment(bid, pid, cid):
     """ Allows the editing of a post as long as the active user is the post creator or Admin. """

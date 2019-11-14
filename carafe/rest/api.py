@@ -10,13 +10,19 @@ def _dict_gen(**kwargs):
             filtered_dict[k] = kwargs[k]
     return filtered_dict
 
+
 api = Blueprint('api', __name__)
 
 
 @api.route('/api/boards', methods=['GET'])
 def api_boards():
     boards = Board.query.filter_by(deleted=False)
-    return jsonify(boards=[_dict_gen(bid=b.bid, desc=b.desc, name=b.name) for b in boards])
+    return jsonify(
+        boards=[
+            _dict_gen(
+                bid=b.bid,
+                desc=b.desc,
+                name=b.name) for b in boards])
 
 
 @api.route('/api/board/<bid>/posts/', methods=['GET'])
@@ -29,8 +35,14 @@ def api_posts_by_bid(bid):
             post_range = json.loads(post_range)
             if post_range[-1] - post_range[0] <= constants.RESOURCE_LIMIT:
                 start, end = post_range[0], post_range[-1]
-        except:
+        except BaseException:
             message = "Invalid post_range parameter."
     posts = Post.query.filter_by(bid=bid, deleted=False)
-    posts = sorted(posts, key=lambda x : x.recent_date())
-    return jsonify(posts=[_dict_gen(pid=p.pid, user=p.get_username(), name=p.name, text=p.text) for p in posts])
+    posts = sorted(posts, key=lambda x: x.recent_date())
+    return jsonify(
+        posts=[
+            _dict_gen(
+                pid=p.pid,
+                user=p.get_username(),
+                name=p.name,
+                text=p.text) for p in posts])

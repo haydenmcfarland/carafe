@@ -34,8 +34,10 @@ class UserContent:
         return ''.join(BeautifulSoup(html, "html.parser").findAll(text=True))
 
     def get_date_str(self):
-        return self.date.strftime('%b %e %Y at ') + self.date.strftime('%I:%M %p').lstrip('0')
+        return self.date.strftime('%b %e %Y at ') + \
+            self.date.strftime('%I:%M %p').lstrip('0')
 
     @staticmethod
     def format_date_str(date):
-        return date.strftime('%b %e %Y at ') + date.strftime('%I:%M %p').lstrip('0')
+        return date.strftime('%b %e %Y at ') + \
+            date.strftime('%I:%M %p').lstrip('0')
