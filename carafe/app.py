@@ -277,7 +277,8 @@ def create_post(bid):
 
 @APP.route('/board/<bid>/post/<pid>/edit', methods=constants.METHODS)
 @login_required
-def edit_post(_bid, pid):
+def edit_post(bid, pid):
+    #pylint: disable=unused-argument
     """
     allows the editing of a post as long as the active user is the post
     creator or admin
@@ -299,7 +300,8 @@ def edit_post(_bid, pid):
 
 @APP.route('/board/<bid>/post/<pid>/delete')
 @login_required
-def delete_post(_bid, pid):
+def delete_post(bid, pid):
+    #pylint: disable=unused-argument
     """
     allows for the deletion of a post as long as the active user is the post
     creator or admin
@@ -313,7 +315,8 @@ def delete_post(_bid, pid):
 # COMMENT VIEWS
 @APP.route('/board/<bid>/post/<pid>/comment', methods=constants.METHODS)
 @login_required
-def create_comment(_bid, pid):
+def create_comment(bid, pid):
+    #pylint: disable=unused-argument
     """
     allows for the creation of a comment by an active user
     """
@@ -332,7 +335,8 @@ def create_comment(_bid, pid):
     '/board/<bid>/post/<pid>/comment/<cid>/edit',
     methods=constants.METHODS)
 @login_required
-def edit_comment(_bid, _pid, cid):
+def edit_comment(bid, pid, cid):
+    #pylint: disable=unused-argument
     """
     allows the editing of a post as long as the active user is the post creator
     or admin
@@ -352,7 +356,8 @@ def edit_comment(_bid, _pid, cid):
 
 @APP.route('/board/<bid>/post/<pid>/comment/<cid>/delete')
 @login_required
-def delete_comment(_bid, pid, cid):
+def delete_comment(bid, pid, cid):
+    #pylint: disable=unused-argument
     """
     allows for a comment to be 'deleted' by the comment creator or admin
     """
@@ -364,7 +369,8 @@ def delete_comment(_bid, pid, cid):
 
 
 @APP.route('/board/<bid>/post/<pid>/comment/<cid>/revive')
-def revive_comment(_bid, pid, cid):
+def revive_comment(bid, pid, cid):
+    #pylint: disable=unused-argument
     """
     allows for a 'deleted' comment to be 'revived' by an admin
     """
