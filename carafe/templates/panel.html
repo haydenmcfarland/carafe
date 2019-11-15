@@ -1,44 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row row-striped">
-    <div class="col-md-12 text-center">
-        <h3>Admin Panel</h3>
+    <div class="row row-striped">
+        <div class="col-md-12 text-center">
+            <h3>Admin Panel</h3>
+        </div>
     </div>
-</div>
-<div>
-    <h4>Boards</h4>
-    <div class="row">
-        <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Options</th>
-            <th>Board Name</th>
-        </tr>
-        </thead>
-            <tbody>
-                {% for b in Board.query.order_by(Board.bid).all() %}
-                {% with post_count = Post.query.filter_by(bid=b.bid).count() %}
+    <div>
+        <h4>Boards</h4>
+        <div class="row">
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td class="col-md-2">
-                            {% if b.deleted %}
-                            <a class="text-danger" href="/admin/board/{{b.bid}}/erase"><i class="fa fa-eraser fa-lg"></i></a>
-                            <a class="text-success" href="/admin/board/{{b.bid}}/revive"><i class="fa fa-life-ring fa-lg"></i></a>
-                            {% else %}
-                            <a class="text-warning" href="/board/{{b.bid}}/delete"><i class="fa fa-trash fa-lg"></i></a>
-                            {% endif %}
-                            {% if post_count != 0 %}
-                            <a href="/admin/panel/board/{{b.bid}}/posts"><i class="fa fa-pencil-square-o fa-lg"></i></a>
-                            {{post_count}}
-                            {% endif %}
-                        </td>
-                        <td class="col-md-10">
-                            {{b.name}}
-                        </td>
+                        <th>Options</th>
+                        <th>Board Name</th>
                     </tr>
-                {% endwith %}
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for b in Board.query.order_by(Board.bid).all() %}
+                        {% with post_count = Post.query.filter_by(bid=b.bid).count() %}
+                            <tr>
+                                <td class="col-md-2">
+                                    {% if b.deleted %}
+                                        <a class="text-danger" href="/admin/board/{{b.bid}}/erase"><i class="fa fa-eraser fa-lg"></i></a>
+                                        <a class="text-success" href="/admin/board/{{b.bid}}/revive"><i class="fa fa-life-ring fa-lg"></i></a>
+                                    {% else %}
+                                        <a class="text-warning" href="/board/{{b.bid}}/delete"><i class="fa fa-trash fa-lg"></i></a>
+                                    {% endif %}
+                                    {% if post_count != 0 %}
+                                        <a href="/admin/panel/board/{{b.bid}}/posts"><i class="fa fa-pencil-square-o fa-lg"></i></a>
+                                        {{post_count}}
+                                    {% endif %}
+                                </td>
+                                <td class="col-md-10">
+                                    {{b.name}}
+                                </td>
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 {% endblock %}
