@@ -1,17 +1,17 @@
+""" Carafe REST API - WIP """
+
 from flask import Blueprint, request, jsonify, json
 from carafe.database.model import Board, Post
 from carafe import constants
 
-api = Blueprint('api', __name__)
+API = Blueprint('api', __name__)
 
 
-"""
-api.py is WIP
-"""
-
-
-@api.route('/api/boards', methods=['GET'])
+@API.route('/api/boards', methods=['GET'])
 def api_boards():
+    """
+    get all boards
+    """
     boards = Board.query.filter_by(deleted=False)
     return jsonify(
         boards=[
@@ -22,15 +22,15 @@ def api_boards():
             } for b in boards])
 
 
-@api.route('/api/board/<bid>/posts/', methods=['GET'])
+@API.route('/api/board/<bid>/posts/', methods=['GET'])
 def api_posts_by_bid(bid):
+    """
+    get all posts by board id
+    """
     post_range = request.args.get('post_range')
     if post_range:
-        try:
-            post_range = json.loads(post_range)
-            if post_range[-1] - post_range[0] <= constants.RESOURCE_LIMIT:
-                pass
-        except BaseException:
+        post_range = json.loads(post_range)
+        if post_range[-1] - post_range[0] <= constants.RESOURCE_LIMIT:
             pass
     posts = Post.query.filter_by(bid=bid, deleted=False)
     posts = sorted(posts, key=lambda x: x.recent_date())
