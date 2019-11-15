@@ -1,66 +1,67 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6">
-        {% if current_user.is_admin %}
-        <div id="createboard" class="collapse">
-            {% include 'form/createboard_form.html' %}
-        </div>
-        {% endif %}
-    </div>
-</div>
-<div class="row row-border">
-    <div class="col-xs-12 col-sm-6 col-md-6">
-        <div>
-            <i class="fa fa-home fa-2x"></i>
+{% extends "base.html" %} 
+    {% block content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6">
             {% if current_user.is_admin %}
-            <a data-toggle="collapse" data-target="#createboard" role="button"><i class="fa fa-plus-square fa-2x"></i></a>
+                <div id="createboard" class="collapse">
+                    {% include 'form/createboard_form.html' %}
+                </div>
             {% endif %}
         </div>
     </div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>Posts</h4></div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>Recent</h4></div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>User</h4></div>
-</div>
-{% for b in boards %}
-<div class="row row-striped">
-    <div class="col-xs-12 col-sm-6 col-md-6">
-        <div>
-            <a href="{{url_for('board', bid = b.bid)}}" class="btn btn-primary" role="button">{{b.name}}</a>
-            <br><br>
-            {% if current_user.is_admin %}
-            <a class="text-success" data-toggle="collapse" data-target="#b_{{b.bid}}" role="button"><i class="fa fa-pencil-square-o fa-lg"></i></a>
-            <a class="text-warning" href="{{url_for('delete_board', bid = b.bid)}}" class="btn btn-danger" role="button"><i class="fa fa-trash-o fa-lg"></i></a>
-            {% endif %}
+    <div class="row row-border">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div>
+                <i class="fa fa-home fa-2x"></i> {% if current_user.is_admin %}
+                <a data-toggle="collapse" data-target="#createboard" role="button"><i class="fa fa-plus-square fa-2x"></i></a> {% endif %}
+            </div>
         </div>
-        <br><p>{{b.desc}}</p>
-        {% if current_user.is_admin %}
-        <div id="b_{{b.bid}}" class="collapse">
-            {% with form = b.get_edit_form() %}
-            {% include 'form/editboard_form.html' %}
-            {% endwith %}
+        <div class="hidden-xs col-sm-2 col-md-2 text-center">
+            <h4>Posts</h4></div>
+        <div class="hidden-xs col-sm-2 col-md-2 text-center">
+            <h4>Recent</h4></div>
+        <div class="hidden-xs col-sm-2 col-md-2 text-center">
+            <h4>User</h4></div>
+    </div>
+    {% for b in boards %}
+        <div class="row row-striped">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div>
+                    <a href="{{url_for('board', bid = b.bid)}}" class="btn btn-primary" role="button">{{b.name}}</a>
+                    <br>
+                    <br> {% if current_user.is_admin %}
+                    <a class="text-success" data-toggle="collapse" data-target="#b_{{b.bid}}" role="button"><i class="fa fa-pencil-square-o fa-lg"></i></a>
+                    <a class="text-warning" href="{{url_for('delete_board', bid = b.bid)}}" class="btn btn-danger" role="button"><i class="fa fa-trash-o fa-lg"></i></a> {% endif %}
+                </div>
+                <br>
+                <p>{{b.desc}}</p>
+                    {% if current_user.is_admin %}
+                        <div id="b_{{b.bid}}" class="collapse">
+                            {% with form = b.get_edit_form() %} 
+                                {% include 'form/editboard_form.html' %} 
+                            {% endwith %}
+                        </div>
+                    {% endif %}
+            </div>
+            <div class="hidden-xs col-sm-2 col-md-2 text-center">
+                {{b.get_post_count()}}
+            </div>
+            <div class="hidden-xs col-sm-2 col-md-2 text-center">
+                {% if b.get_recent_post() != None %}
+                    <a href="/board/{{b.bid}}/post/{{b.get_recent_post().pid}}">{{b.get_recent_post().name[0:15]}}</a> 
+                {% else %}
+                    <span class="fa fa-minus"></span> 
+                {% endif %}
+            </div>
+            <div class="hidden-xs col-sm-2 col-md-2 text-center">
+                {% if b.get_recent_post()!= None %}
+                    <b>{{b.get_recent_post().get_username()}}</b>
+                    <br><img src="{{url_for('static', filename='img/defaultuser.png')}}" />
+                    <br><small><i>{{b.get_recent_post().get_date_str()}}</i></small></td>
+                {% else %}
+                    <span class="fa fa-minus"></span> 
+                {% endif %}
+            </div>
         </div>
-        {% endif %}
-    </div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center">
-        {{b.get_post_count()}}
-    </div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center">
-         {% if  b.get_recent_post() != None %}
-        <a href="/board/{{b.bid}}/post/{{b.get_recent_post().pid}}">{{b.get_recent_post().name[0:15]}}</a>
-        {% else %}
-        <span class="fa fa-minus"></span>
-        {% endif %}
-    </div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center">
-        {% if b.get_recent_post()!= None %}
-        <b>{{b.get_recent_post().get_username()}}</b>
-        <br><img src="{{url_for('static', filename='img/defaultuser.png')}}" />
-        <br><small><i>{{b.get_recent_post().get_date_str()}}</i></small></td>
-        {% else %}
-        <span class="fa fa-minus"></span>
-        {% endif %}
-    </div>
-</div>
-{% endfor %}
+    {% endfor %} 
 {% endblock %}

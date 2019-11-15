@@ -1,18 +1,17 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 {% block content %}
-<div class="row">
-	<div class="col-md-6">
-		<h3>Login to Your Account</h3><br><br>
-		{% from "form/_formhelpers.html" import render_field %}
-		<form method="post">
-			<dl>
-				{{ render_field(form.username, placeholder='Username') }}
-				{{ render_field(form.password, placeholder='Enter Password')}}
-				{{ render_field(form.confirm, placeholder='Confirm Password')}}
-				<input class="btn btn-primary" type=submit value=Login>
-				<a href="/signup" class="btn btn-default btn-block">Sign up</a>
-			</dl>
-		</form>
-	</div>
-</div>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Login to Your Account</h3>
+            <br>
+            <br> {% from "form/_formhelpers.html" import render_field %}
+            <form method="post">
+                <dl>
+                    {{ render_field(form.username, placeholder='Username') }} {{ render_field(form.password, placeholder='Enter Password')}} {{ render_field(form.confirm, placeholder='Confirm Password')}}
+                    <input class="btn btn-primary" type=submit value=Login>
+                    <a href="/signup" class="btn btn-default btn-block">Sign up</a>
+                </dl>
+            </form>
+        </div>
+    </div>
 {% endblock %}
