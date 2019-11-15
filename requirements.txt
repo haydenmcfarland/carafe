@@ -1,9 +1,11 @@
 astroid==2.3.3
+attrs==17.2.0
 autopep8==1.4.4
 beautifulsoup4==4.7.1
 blinker==1.4
 Click==7.0
 decorator==4.4.1
+docopt==0.6.2
 entrypoints==0.3
 flake8==3.7.9
 Flask==1.1.0
@@ -16,12 +18,14 @@ htmlmin==0.1.12
 isort==4.3.21
 itsdangerous==1.1.0
 Jinja2==2.10.1
+jinjalint==0.5
 jsonify==0.5
 lazy-object-proxy==1.4.3
 Markdown==3.1.1
 MarkupSafe==1.1.1
 mccabe==0.6.1
 micawber==0.5.0
+parsy==1.1.0
 passlib==1.7.1
 pbr==5.4.3
 psycopg2==2.7.7
