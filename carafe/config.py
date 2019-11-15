@@ -1,7 +1,11 @@
+""" Carafe Configration """
 from os import environ
 
 
 def load_config(app):
+    """
+    loads application configuration variables
+    """
     app.config['DEBUG'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['NAME'] = 'Carafe'
