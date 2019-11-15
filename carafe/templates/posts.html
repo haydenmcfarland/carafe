@@ -1,59 +1,61 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6">
-        {% if current_user.is_authenticated or current_user.is_admin %}
-        <div id="createpost" class="collapse">
-            {% include 'form/createpost_form.html' %}
-        </div>
-        {% endif %}
-    </div>
-</div>
-<div class="row row-border">
-    <div class="col-xs-12 col-sm-6 col-md-6">
-        <div>
-            <a href="{{ url_for('index') }}" role="button"><i class="fa fa-chevron-circle-left fa-2x"></i></a>
-            <a href="\"><i class="fa fa-home fa-2x"></i></a>
-            {% if current_user.is_authenticated %}
-            <a data-toggle="collapse" data-target="#createpost" role="button"><i class="fa fa-plus-square fa-2x"></i></a>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            {% if current_user.is_authenticated or current_user.is_admin %}
+                <div id="createpost" class="collapse">
+                    {% include 'form/createpost_form.html' %}
+                </div>
             {% endif %}
-            <h3 class="header-margin">{{b.name}}</h3>
         </div>
     </div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>User</h4></div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>Comments</h4></div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>Activity</h4></div>
-</div>
-{% for p in posts %}
-<div class="row row-striped">
-    <div class="col-xs-12 col-sm-6 col-md-6">
-        <div>
-            <a class="btn btn-primary" href="{{ url_for('post', bid = b.bid, pid = p.pid) }}" role="button">{{ p.name }}</a>
-            {% if current_user.uid == p.uid or current_user.is_admin %}
-            <br><br>
-            <a class="text-success" data-toggle="collapse" data-target="#p_{{p.pid}}" role="button"><span class="fa fa-edit fa-lg"></span></a>
-            <a class="text-warning" href="{{url_for('delete_post', bid = b.bid, pid=p.pid)}}" role="button"><span class="fa fa-trash-o fa-lg"></span></a>
-            {% endif %}
-            <br><br><p>{{ p.clean_text | truncate(128) }} </p>
+    <div class="row row-border">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div>
+                <a href="{{ url_for('index') }}" role="button"><i class="fa fa-chevron-circle-left fa-2x"></i></a>
+                <a href="\"><i class="fa fa-home fa-2x"></i></a>
+                {% if current_user.is_authenticated %}
+                    <a data-toggle="collapse" data-target="#createpost" role="button"><i class="fa fa-plus-square fa-2x"></i></a>
+                {% endif %}
+                <h3 class="header-margin">{{b.name}}</h3>
+            </div>
         </div>
-        {% if current_user.uid == p.uid or current_user.is_admin %}
-        <div id="p_{{p.pid}}" class="collapse">
-            {% with pform = p.get_edit_form() %}
-            {% include 'form/editpost_form.html' %}
-            {% endwith %}
+        <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>User</h4></div>
+        <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>Comments</h4></div>
+        <div class="hidden-xs col-sm-2 col-md-2 text-center"><h4>Activity</h4></div>
+    </div>
+    {% for p in posts %}
+        <div class="row row-striped">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div>
+                    <a class="btn btn-primary" href="{{ url_for('post', bid = b.bid, pid = p.pid) }}" role="button">{{ p.name }}</a>
+                    {% if current_user.uid == p.uid or current_user.is_admin %}
+                        <br>
+                        <br>
+                        <a class="text-success" data-toggle="collapse" data-target="#p_{{p.pid}}" role="button"><span class="fa fa-edit fa-lg"></span></a>
+                        <a class="text-warning" href="{{url_for('delete_post', bid = b.bid, pid=p.pid)}}" role="button"><span class="fa fa-trash-o fa-lg"></span></a>
+                    {% endif %}
+                    <br><br><p>{{ p.clean_text | truncate(128) }} </p>
+                </div>
+                {% if current_user.uid == p.uid or current_user.is_admin %}
+                    <div id="p_{{p.pid}}" class="collapse">
+                        {% with pform = p.get_edit_form() %}
+                            {% include 'form/editpost_form.html' %}
+                        {% endwith %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="hidden-xs col-sm-2 col-md-2 text-center">
+                <b>{{p.get_username()}}</b>
+                <br>
+                <img src="{{url_for('static', filename='img/defaultuser.png')}}" />
+            </div>
+            <div class="hidden-xs col-sm-2 col-md-2 text-center">
+                {{p.get_comment_count()}}
+            </div>
+            <div class="hidden-xs col-sm-2 col-md-2 text-center">
+                <small><i>{{p.get_latest_comment_info()}}</i></small>
+            </div>
         </div>
-        {% endif %}
-    </div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center">
-        <b>{{p.get_username()}}</b>
-        <br><img src="{{url_for('static', filename='img/defaultuser.png')}}" />
-    </div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center">
-        {{p.get_comment_count()}}
-    </div>
-    <div class="hidden-xs col-sm-2 col-md-2 text-center">
-        <small></i> <i>{{p.get_latest_comment_info()}}</i></small></td>
-    </div>
-</div>
-{% endfor %}
+    {% endfor %}
 {% endblock %}
