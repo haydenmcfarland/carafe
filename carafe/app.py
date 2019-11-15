@@ -1,11 +1,15 @@
 from flask import Flask, request, render_template, redirect, url_for, flash
-from flask_login import LoginManager, current_user, login_user, login_required, logout_user
+from flask_login import (
+    LoginManager, current_user, login_user, login_required, logout_user
+)
 from htmlmin.main import minify
 from passlib.hash import sha512_crypt as sha
 from carafe.config import load_config
 from carafe.extensions.login import AnonymousUser
 from carafe.database.model import Board, Post, Comment, User, db
-from carafe.forms import BoardForm, PostForm, CommentForm, LoginForm, SignupForm
+from carafe.forms import (
+    BoardForm, PostForm, CommentForm, LoginForm, SignupForm
+)
 from carafe.rest.api import api
 from carafe import constants
 from sqlalchemy import text
@@ -43,7 +47,9 @@ def unauthorized_callback():
 
 @login_manager.user_loader
 def load_user(uid):
-    """ Callback that is used to reload user object from the User uid. """
+    """
+    callback that is used to reload user object from the User uid
+    """
     return User.query.get(uid)
 
 
@@ -54,7 +60,9 @@ def context_config():
 
 # Database Helper function to Initialize Database Tables
 def create_database_tables():
-    """ Initializes database in the proper application context. """
+    """
+    initializes database in the proper application context
+    """
     with app.app_context():
         db.create_all()
 
@@ -85,7 +93,9 @@ def panel():
 
 @app.route('/board/<bid>')
 def board(bid):
-    """ View that displays the post of the board specified by the provided bid. """
+    """
+    view that displays the post of the board specified by the provided bid
+    """
     form = PostForm(request.form)
     posts = Post.query.filter_by(
         bid=bid, deleted=False).outerjoin(Comment).order_by(
@@ -123,7 +133,8 @@ def sign_up():
     form = SignupForm(request.form)
     if request.method == 'POST' and form.validate():
         for u in User.query.all():
-            if u.username == form.username.data.lower() or u.email == form.email.data.lower():
+            if (u.username == form.username.data.lower() or
+                    u.email == form.email.data.lower()):
                 flash('Username or email is already taken.')
                 return render_template('signup.html', form=form)
         user = User(
@@ -140,7 +151,10 @@ def sign_up():
 
 @app.route("/login", methods=constants.METHODS)
 def login():
-    """ Logs in user if proper parameters are entered and creates a session for that user. """
+    """
+    logs in user if proper parameters are entered and creates a session for
+    that user
+    """
     if current_user.is_authenticated:
         flash('You are already logged in!')
         return redirect(url_for('index'))
@@ -160,7 +174,7 @@ def login():
 @app.route("/logout")
 @login_required
 def logout():
-    """ Logs out user and redirects to front page. """
+    """ logs out user and redirects to front page """
     logout_user()
     flash('Successfully logged out.')
     return redirect(request.referrer)
@@ -168,7 +182,9 @@ def logout():
 
 @app.route('/board/create', methods=constants.METHODS)
 def create_board():
-    """ Creates board if form parameters meet requirements. """
+    """
+    creates board if form parameters meet requirements
+    """
     form = BoardForm(request.form)
     if current_user.is_admin and request.method == 'POST' and form.validate():
         if form.name.data.lower() not in [
@@ -187,7 +203,9 @@ def create_board():
 
 @app.route('/board/edit/<bid>', methods=constants.METHODS)
 def edit_board(bid):
-    """ Allows the editing of a board with the provided bid. """
+    """
+    allows the editing of a board with the provided bid
+    """
     form = BoardForm(request.form)
     b = Board.query.get(bid)
     if current_user.is_admin and request.method == 'POST':
@@ -205,7 +223,9 @@ def edit_board(bid):
 @app.route('/board/<bid>/delete')
 @login_required
 def delete_board(bid):
-    """ Allows the a board to be flagged for deletion only if the user is an Admin. """
+    """
+    allows the board to be flagged for deletion by an admin
+    """
     if current_user.is_admin:
         Board.query.get(bid).deleted = True
         db.session.commit()
@@ -217,7 +237,10 @@ def delete_board(bid):
 @app.route('/board/<bid>/post/create', methods=constants.METHODS)
 @login_required
 def create_post(bid):
-    """ Allows the creation of a post as long as parameters are met and the user is in an active session. """
+    """
+    allows the creation of a post as long as parameters are met and the user
+    is in an active session
+    """
     form = PostForm(request.form)
     if request.method == 'POST':
         if form.validate():
@@ -237,7 +260,10 @@ def create_post(bid):
 @app.route('/board/<bid>/post/<pid>/edit', methods=constants.METHODS)
 @login_required
 def edit_post(bid, pid):
-    """ Allows the editing of a post as long as the active user is the post creator or Admin. """
+    """
+    allows the editing of a post as long as the active user is the post
+    creator or admin
+    """
     p = Post.query.get(pid)
     form = PostForm(request.form)
     if request.method == 'POST' and current_user.uid == p.uid:
@@ -256,7 +282,10 @@ def edit_post(bid, pid):
 @app.route('/board/<bid>/post/<pid>/delete')
 @login_required
 def delete_post(bid, pid):
-    """ Allows for the deletion of a post as long as the active user is the post creator or Admin. """
+    """
+    allows for the deletion of a post as long as the active user is the post
+    creator or admin
+    """
     if current_user.is_admin or current_user == Post.query.get(int(pid)).uid:
         Post.query.get(pid).deleted = True
         db.session.commit()
@@ -267,7 +296,9 @@ def delete_post(bid, pid):
 @app.route('/board/<bid>/post/<pid>/comment', methods=constants.METHODS)
 @login_required
 def create_comment(bid, pid):
-    """ Allows for the creation of a comment by an active user. """
+    """
+    allows for the creation of a comment by an active user
+    """
     form = CommentForm(request.form)
     if request.method == 'POST':
         if form.validate():
@@ -284,7 +315,10 @@ def create_comment(bid, pid):
     methods=constants.METHODS)
 @login_required
 def edit_comment(bid, pid, cid):
-    """ Allows the editing of a post as long as the active user is the post creator or Admin. """
+    """
+    allows the editing of a post as long as the active user is the post creator
+    or admin
+    """
     c = Comment.query.get(cid)
     form = CommentForm(request.form)
     if request.method == 'POST' and current_user.uid == c.uid:
@@ -301,7 +335,9 @@ def edit_comment(bid, pid, cid):
 @app.route('/board/<bid>/post/<pid>/comment/<cid>/delete')
 @login_required
 def delete_comment(bid, pid, cid):
-    """ Allows for a comment to be 'deleted' by the comment creator or Admin. """
+    """
+    allows for a comment to be 'deleted' by the comment creator or admin
+    """
     comment = Comment.query.filter_by(pid=pid, cid=cid).first()
     if current_user.is_admin or current_user.uid == comment.uid:
         comment.deleted = True
@@ -311,7 +347,9 @@ def delete_comment(bid, pid, cid):
 
 @app.route('/board/<bid>/post/<pid>/comment/<cid>/revive')
 def revive_comment(bid, pid, cid):
-    """ Allows for a 'deleted' comment to be 'revived' by an Admin. """
+    """
+    allows for a 'deleted' comment to be 'revived' by an admin
+    """
     comment = Comment.query.filter_by(pid=pid, cid=cid).first()
     if current_user.is_admin:
         comment.deleted = False
@@ -325,7 +363,8 @@ def erase_board(bid):
     if current_user.is_admin:
         db.session.delete(Board.query.get(bid))
         db.session.commit()
-        msg = 'Board {} permanently removed from database. All associated posts and comments have also been removed.'
+        msg = 'Board {} permanently removed from database. '\
+            'All associated posts and comments have also been removed.'
         flash(msg.format(bid))
     else:
         flash(constants.DEFAULT_SUBMISSION_ERR)
