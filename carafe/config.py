@@ -15,7 +15,9 @@ def load_config(app):
         app.config['SQLALCHEMY_DATABASE_URI'] = (
             'postgresql://postgres:password@localhost/postgres'
         )
+        app.config['THREADED'] = False
     else:
+        app.config['THREADED'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
         app.config['SECRET_KEY'] = environ['SECRET_KEY']
 
