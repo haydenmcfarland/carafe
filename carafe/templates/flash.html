@@ -1,9 +1,10 @@
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul class=flashes>
-    {% for message in messages %}
-    <i class="fa fa-bell-o fa-lg fa-fw pull-left"></i><p>{{ message }}</p>
-    {% endfor %}
-</ul>
-{% endif %}
+{% with messages = get_flashed_messages() %} 
+    {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+                <i class="fa fa-bell-o fa-lg fa-fw pull-left"></i>
+                <p>{{ message }}</p>
+            {% endfor %}
+        </ul>
+    {% endif %} 
 {% endwith %}

@@ -1,33 +1,34 @@
 <!doctype html>
 <html>
+
 <head>
-  <title>{{ config["NAME"] }}</title>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <meta name="google-site-verification" content="hv4Juonf2SofYolhGW9cjfikUmO2CBTvYgOFdGpmHdM" />
-  <link rel=stylesheet type=text/css href="{{url_for('static', filename='style/bootstrap.min.css')}}" />
-  <link rel=stylesheet type=text/css href="{{url_for('static', filename='style/main.css')}}" />
-  <link rel=stylesheet type=text/css href="{{url_for('static', filename='style/font-awesome.min.css')}}" />
-  <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
-  <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <meta name="google-site-verification" content="hv4Juonf2SofYolhGW9cjfikUmO2CBTvYgOFdGpmHdM" />
+    <link rel=stylesheet type=text/css href="{{url_for('static', filename='style/bootstrap.min.css')}}" />
+    <link rel=stylesheet type=text/css href="{{url_for('static', filename='style/main.css')}}" />
+    <link rel=stylesheet type=text/css href="{{url_for('static', filename='style/font-awesome.min.css')}}" />
+    <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
+    <title>{{ config["NAME"] }}</title>
 </head>
+
 <body>
-<div class="container">
-  <div class="page-header page-heading">
-    <a href ="/"><h1 class="pull-left logo">{{ config["NAME"] }}</h1></a>
-    {% include 'nav.html' %}
-  </div>
-  <!-- Flash Messages -->
-  {% include 'flash.html' %}
-  <!-- Templates that extend the base template -->
-  {% block content %}{% endblock%}
-  <div class='row page-footer'>
-    <div class='col col-md-12 text-center'>
-      <a class="white" href='http://github.com/haydenmcfarland/carafe'><i class='fa fa-github fa-4x'></i></a>
+    <div class="container">
+        <div class="page-header page-heading">
+            <a href="/"><h1 class="pull-left logo">{{ config["NAME"] }}</h1></a> {% include 'nav.html' %}
+        </div>
+        <!-- Flash Messages -->
+        {% include 'flash.html' %}
+        <!-- Templates that extend the base template -->
+        {% block content %}{% endblock%}
+        <div class='row page-footer'>
+            <div class='col col-md-12 text-center'>
+                <a class="white" href='http://github.com/haydenmcfarland/carafe'><i class='fa fa-github fa-4x'></i></a>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 </body>
+
 </html>
