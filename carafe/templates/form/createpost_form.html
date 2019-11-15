@@ -1,12 +1,12 @@
 {% block content %}
-<div>
-    {% from "form/_formhelpers.html" import render_field %}
-    <form method="post" action="{{url_for('create_post', bid=b.bid) }}">
-        <dl>
-            {{ render_field(pform.name, size=50, maxlength=80, placeholder='Post Title') }}
-            {{ render_field(pform.desc, rows=10, cols=50, placeholder='Markdown is supported!',maxlength=1024) }}
-            <input class="btn btn-primary" type=submit value=Submit>
-        </dl>
-    </form>
-</div>
+    <div>
+        {% from "form/_formhelpers.html" import render_field %}
+        <form method="post" action="{{url_for('create_post', bid=b.bid) }}">
+            <dl>
+                {{ render_field(pform.name, size=50, maxlength=80, placeholder='Post Title') }}
+                {{ render_field(pform.desc, rows=10, cols=50, placeholder='Markdown is supported!',maxlength=1024) }}
+                <input class="btn btn-primary" type=submit value=Submit>
+            </dl>
+        </form>
+    </div>
 {% endblock %}
