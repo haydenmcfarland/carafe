@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
-    <div class="col col-md-12 text-center">
-        <h2>Setup</h2>
-        {% if current_user.is_admin %}
-        {% include 'form/config_form.html' %}
-        {% else %}
-        <h4>Please login as admin.</h4>
-        {% endif %}
+    <div class="row">
+        <div class="col col-md-12 text-center">
+            <h2>Setup</h2>
+            {% if current_user.is_admin %}
+                {% include 'form/config_form.html' %}
+            {% else %}
+                <h4>Please login as admin.</h4>
+            {% endif %}
+        </div>
     </div>
-</div>
 {% endblock %}
