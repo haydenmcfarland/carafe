@@ -1,3 +1,5 @@
+""" Carafe Constants """
+
 # DATABASE/CONTENT LIMITS
 TEXT_LIMIT = 4096
 TEXT_MIN = 4
