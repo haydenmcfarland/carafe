@@ -292,7 +292,7 @@ argument-naming-style=snake_case
 
 # Regular expression matching correct argument names. Overrides argument-
 # naming-style.
-#argument-rgx=
+# argument-rgx=
 
 # Naming style matching correct attribute names.
 attr-naming-style=snake_case
@@ -547,7 +547,7 @@ max-returns=6
 max-statements=50
 
 # Minimum number of public methods for a class (see R0903).
-min-public-methods=2
+min-public-methods=1
 
 
 [CLASSES]
@@ -572,7 +572,7 @@ valid-classmethod-first-arg=cls
 # List of valid names for the first argument in a metaclass class method.
 valid-metaclass-classmethod-first-arg=cls
 
-ignored-classes=SQLObject,Registrant,scoped_session
+ignored-classes=SQLObject,Registrant,scoped_session,CarafeObj,UserContent
 
 [EXCEPTIONS]
 
