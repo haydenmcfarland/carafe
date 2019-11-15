@@ -5,6 +5,11 @@ from carafe import constants
 api = Blueprint('api', __name__)
 
 
+"""
+api.py is WIP
+"""
+
+
 @api.route('/api/boards', methods=['GET'])
 def api_boards():
     boards = Board.query.filter_by(deleted=False)
