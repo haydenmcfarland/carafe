@@ -8,7 +8,9 @@ def load_config(app):
     app.config['LOCAL'] = False
     if app.config['LOCAL']:
         app.config['SECRET_KEY'] = 'Not so secret key'
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/postgres'
+        app.config['SQLALCHEMY_DATABASE_URI'] = (
+            'postgresql://postgres:password@localhost/postgres'
+        )
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
         app.config['SECRET_KEY'] = environ['SECRET_KEY']
