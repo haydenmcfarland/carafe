@@ -1,14 +1,14 @@
 """ Carafe - Flask Message Board """
 from os import environ
-from carafe.app import app
+from carafe.app import APP
 
 if __name__ == '__main__':
-    if app.config['LOCAL']:
-        app.run()
+    if APP.config['LOCAL']:
+        APP.run()
     else:
-        PORT = int(environ.get('PORT', app.config['PORT']))
-        app.run(
+        PORT = int(environ.get('PORT', APP.config['PORT']))
+        APP.run(
             host='0.0.0.0',
             port=PORT,
-            threaded=app.config['THREADED'],
-            debug=app.config['DEBUG'])
+            threaded=APP.config['THREADED'],
+            debug=APP.config['DEBUG'])

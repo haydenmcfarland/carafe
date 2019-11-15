@@ -9,19 +9,19 @@ from sqlalchemy import text
 
 from carafe.config import load_config
 from carafe.extensions.login import AnonymousUser
-from carafe.database.model import Board, Post, Comment, User, db
+from carafe.database.model import Board, Post, Comment, User, DB
 from carafe.forms import (
     BoardForm, PostForm, CommentForm, LoginForm, SignupForm
 )
-from carafe.rest.api import api
+from carafe.rest.api import API
 from carafe import constants
 
 # APP INIT
 APP = Flask(__name__)
-APP.register_blueprint(api)
+APP.register_blueprint(API)
 load_config(APP)
-db.init_app(APP)
-db.app = APP
+DB.init_app(APP)
+DB.app = APP
 LOGIN_MANAGER = LoginManager()
 LOGIN_MANAGER.anonymous_user = AnonymousUser
 LOGIN_MANAGER.init_app(APP)
@@ -70,7 +70,7 @@ def create_database_tables():
     initializes database in the proper application context
     """
     with APP.app_context():
-        db.create_all()
+        DB.create_all()
 
 
 # Routes
@@ -159,8 +159,8 @@ def sign_up():
             form.email.data.lower(),
             sha.encrypt(
                 form.password.data))
-        db.session.add(user)
-        db.session.commit()
+        DB.session.add(user)
+        DB.session.commit()
         flash('Thanks for registering, {}!'.format(user.username))
         return redirect(url_for('login'))
     return render_template('signup.html', form=form)
@@ -207,8 +207,8 @@ def create_board():
     if current_user.is_admin and request.method == 'POST' and form.validate():
         if form.name.data.lower() not in [
                 b.name.lower() for b in Board.query.all()]:
-            db.session.add(Board(form.name.data, form.desc.data))
-            db.session.commit()
+            DB.session.add(Board(form.name.data, form.desc.data))
+            DB.session.commit()
             flash('Board ({}) successfully created!'.format(form.name.data))
         else:
             flash('Duplicate board detected.')
@@ -231,7 +231,7 @@ def edit_board(bid):
             if brd.name != form.name.data or brd.desc != form.desc.data:
                 brd.name = form.name.data
                 brd.desc = form.desc.data
-                db.session.commit()
+                DB.session.commit()
                 flash('Board ({}) successfully edited!'.format(form.name.data))
         else:
             flash(constants.DEFAULT_SUBMISSION_ERR)
@@ -246,7 +246,7 @@ def delete_board(bid):
     """
     if current_user.is_admin:
         Board.query.get(bid).deleted = True
-        db.session.commit()
+        DB.session.commit()
         flash('Board {} is no longer viewable.'.format(bid))
     return redirect(request.referrer)
 
@@ -262,13 +262,13 @@ def create_post(bid):
     form = PostForm(request.form)
     if request.method == 'POST':
         if form.validate():
-            db.session.add(
+            DB.session.add(
                 Post(
                     bid,
                     current_user.uid,
                     form.name.data,
                     form.desc.data))
-            db.session.commit()
+            DB.session.commit()
             flash('Post ({}) successfully created!'.format(form.name.data))
         else:
             flash(constants.DEFAULT_SUBMISSION_ERR)
@@ -290,7 +290,7 @@ def edit_post(_bid, pid):
                 og_name = pst.name
                 pst.name = form.name.data
                 pst.text = form.desc.data
-                db.session.commit()
+                DB.session.commit()
                 flash('Post ({}) successfully edited!'.format(og_name))
         else:
             flash(constants.DEFAULT_SUBMISSION_ERR)
@@ -306,7 +306,7 @@ def delete_post(_bid, pid):
     """
     if current_user.is_admin or current_user == Post.query.get(int(pid)).uid:
         Post.query.get(pid).deleted = True
-        db.session.commit()
+        DB.session.commit()
     return redirect(request.referrer)
 
 
@@ -320,8 +320,8 @@ def create_comment(_bid, pid):
     form = CommentForm(request.form)
     if request.method == 'POST':
         if form.validate():
-            db.session.add(Comment(pid, current_user.uid, form.text.data))
-            db.session.commit()
+            DB.session.add(Comment(pid, current_user.uid, form.text.data))
+            DB.session.commit()
             flash('Comment successfully created!')
         else:
             flash(constants.DEFAULT_SUBMISSION_ERR)
@@ -343,7 +343,7 @@ def edit_comment(_bid, _pid, cid):
         if form.validate():
             if comment.text != form.text.data:
                 comment.text = form.text.data
-                db.session.commit()
+                DB.session.commit()
                 flash('Comment successfully edited!')
         else:
             flash(constants.DEFAULT_SUBMISSION_ERR)
@@ -359,7 +359,7 @@ def delete_comment(_bid, pid, cid):
     comment = Comment.query.filter_by(pid=pid, cid=cid).first()
     if current_user.is_admin or current_user.uid == comment.uid:
         comment.deleted = True
-        db.session.commit()
+        DB.session.commit()
     return redirect(request.referrer)
 
 
@@ -371,7 +371,7 @@ def revive_comment(_bid, pid, cid):
     comment = Comment.query.filter_by(pid=pid, cid=cid).first()
     if current_user.is_admin:
         comment.deleted = False
-        db.session.commit()
+        DB.session.commit()
     return redirect(request.referrer)
 
 
@@ -382,8 +382,8 @@ def erase_board(bid):
     admin "erase" board route
     """
     if current_user.is_admin:
-        db.session.delete(Board.query.get(bid))
-        db.session.commit()
+        DB.session.delete(Board.query.get(bid))
+        DB.session.commit()
         msg = 'Board {} permanently removed from database. '\
             'All associated posts and comments have also been removed.'
         flash(msg.format(bid))
@@ -400,7 +400,7 @@ def revive_board(bid):
     """
     if current_user.is_admin:
         Board.query.get(bid).deleted = False
-        db.session.commit()
+        DB.session.commit()
         msg = 'Board {} is now visible again.'
         flash(msg.format(bid))
     else:

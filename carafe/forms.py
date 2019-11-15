@@ -1,3 +1,5 @@
+""" Carafe Forms """
+
 from wtforms import (
     StringField, Form, PasswordField, TextAreaField, BooleanField, validators
 )
@@ -6,6 +8,7 @@ from carafe import constants
 
 
 class SignupForm(Form):
+    """ Carafe User Registration Form """
     username = StringField(
         'Username', [
             Length(
@@ -22,6 +25,7 @@ class SignupForm(Form):
 
 
 class LoginForm(Form):
+    """ Carafe User LoginForm """
     username = StringField(
         'Username', [
             Length(
@@ -34,6 +38,7 @@ class LoginForm(Form):
 
 
 class BoardForm(Form):
+    """ Carafe User Board Creation Form """
     name = StringField(
         'Board Name', [
             Length(
@@ -45,6 +50,7 @@ class BoardForm(Form):
 
 
 class PostForm(Form):
+    """ Carafe User Post Creation Form """
     name = StringField(
         'Post Title', [
             Length(
@@ -56,6 +62,7 @@ class PostForm(Form):
 
 
 class CommentForm(Form):
+    """ Carafe User Comment Creation Form """
     text = TextAreaField(
         'Leave a comment:', [
             Length(
@@ -63,6 +70,7 @@ class CommentForm(Form):
 
 
 class ConfigForm(Form):
+    """ Carafe Admin Config Form """
     name = StringField(
         'Carafe Board Name', [
             Length(
