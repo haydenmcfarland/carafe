@@ -10,7 +10,7 @@ Carafe is an online message board written in Python. Carafe utilizes the Flask f
 - Users, Boards, Posts, Comments
 - Markdown Support
 
-## Deployment
+## Deployment (Heroku)
 
 1. Download the project from Github.
 2. Edit ```config.py``` in the carafe folder.
@@ -20,4 +20,4 @@ Carafe is an online message board written in Python. Carafe utilizes the Flask f
 6. Restart the dyno and enjoy.
 
 
-[example](https://carafeboard.herokuapp.com)
+[Heroku Example](https://carafeboard.herokuapp.com)
