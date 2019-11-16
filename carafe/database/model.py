@@ -59,14 +59,14 @@ class Board(DB.Model):
         gets most recent board post
         """
         return Post.query.filter_by(
-            bid=self.id).order_by(
+            bid=self.bid).order_by(
                 text('date desc')).first()
 
     def get_post_count(self):
         """
         gets the number of posts on a board
         """
-        return Post.query.filter_by(bid=self.id).count()
+        return Post.query.filter_by(bid=self.bid).count()
 
     def get_edit_form(self):
         """
@@ -110,14 +110,14 @@ class Post(DB.Model, UserContent):
         """
         get total comment count on post
         """
-        return Comment.query.filter_by(pid=self.id).count()
+        return Comment.query.filter_by(pid=self.pid).count()
 
     def get_latest_comment_info(self):
         """
         get the latest comment info on the post
         """
         comment = Comment.query.filter_by(
-            pid=self.id).order_by(
+            pid=self.pid).order_by(
                 text("date desc")).first()
         if comment:
             return comment.get_date_str()
@@ -128,7 +128,7 @@ class Post(DB.Model, UserContent):
         get most recent comment date or post date
         """
         comment = Comment.query.filter_by(
-            pid=self.id).order_by(
+            pid=self.pid).order_by(
                 text("date desc")).first()
         if comment:
             return comment.date
