@@ -1,7 +1,6 @@
 """ Carafe Database """
 
 from flask import Markup
-from flask_sqlalchemy import inspect
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
