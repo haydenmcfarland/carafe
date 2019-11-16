@@ -12,16 +12,6 @@ from bs4 import BeautifulSoup
 OEMBED_PROVIDERS = bootstrap_basic(OEmbedCache())
 
 
-class CarafeObj:
-    """ Base Object """
-    @property
-    def id(self):
-        """
-        returns the id of the object
-        """
-        return self.__dict__[inspect(type(self)).primary_key[0].name]
-
-
 class UserContent:
     """ UserContent class """
     @property

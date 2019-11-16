@@ -4,13 +4,13 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from carafe.forms import BoardForm, PostForm, CommentForm
-from carafe.database.base import CarafeObj, UserContent
+from carafe.database.base import UserContent
 from carafe import constants
 
 DB = SQLAlchemy()
 
 
-class User(DB.Model, CarafeObj):
+class User(DB.Model):
     """
     Carafe User class that describes registered user
     """
@@ -40,7 +40,7 @@ class User(DB.Model, CarafeObj):
         return self.uid
 
 
-class Board(DB.Model, CarafeObj):
+class Board(DB.Model):
     """
     Carafe Board class that describes forum boards
     """
@@ -84,7 +84,7 @@ class Board(DB.Model, CarafeObj):
         return User.query.get(self.uid).username
 
 
-class Post(DB.Model, CarafeObj, UserContent):
+class Post(DB.Model, UserContent):
     """
     Carafe Post class that describes board posts
     """
@@ -150,7 +150,7 @@ class Post(DB.Model, CarafeObj, UserContent):
         return User.query.get(self.uid).username
 
 
-class Comment(DB.Model, CarafeObj, UserContent):
+class Comment(DB.Model, UserContent):
     """
     Carafe Comment class that describes post comments
     """
