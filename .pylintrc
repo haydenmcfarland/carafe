@@ -572,7 +572,7 @@ valid-classmethod-first-arg=cls
 # List of valid names for the first argument in a metaclass class method.
 valid-metaclass-classmethod-first-arg=cls
 
-ignored-classes=SQLAlchemy,SQLObject,Registrant,scoped_session,CarafeObj,UserContent
+ignored-classes=SQLAlchemy,SQLObject,Registrant,scoped_session,UserContent
 
 [EXCEPTIONS]
 
