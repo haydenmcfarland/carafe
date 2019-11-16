@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 
 OEMBED_PROVIDERS = bootstrap_basic(OEmbedCache())
 
+
 class CarafeObj:
     """ Base Object """
     @property
