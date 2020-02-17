@@ -19,5 +19,7 @@ Carafe is an online message board written in Python. Carafe utilizes the Flask f
 5. Create a ```SECRET_KEY``` environment variable on the Heroku dashboard.
 6. Restart the dyno and enjoy.
 
-
 [Heroku Example](https://carafeboard.herokuapp.com)
+
+![demo](https://i.imgur.com/64OUpqO.gif)
+
