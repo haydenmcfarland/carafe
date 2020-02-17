@@ -21,5 +21,5 @@ Carafe is an online message board written in Python. Carafe utilizes the Flask f
 
 [Heroku Example](https://carafeboard.herokuapp.com)
 
-![demo](https://i.imgur.com/64OUpqO.gif)
+![demo](https://github.com/haydenmcfarland/assets/blob/master/images/carafe.gif?raw=true)
 
