@@ -27,7 +27,7 @@ mccabe==0.6.1
 micawber==0.5.0
 parsy==1.1.0
 passlib==1.7.1
-pbr==5.4.3
+pbr==5.4.4
 psycopg2==2.7.7
 pycodestyle==2.5.0
 pyflakes==2.1.1
