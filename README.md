@@ -21,9 +21,9 @@ Carafe is an online message board written in Python. Carafe utilizes the Flask f
 
 ## Deployment (Heroku)
 
-1. Download the project from Github.
+1. Clone repo
 2. Edit ```config.py``` in the carafe folder.
-3. Upload the project to a Heroku free tier dyno.
+3. Link repo to Heroku project and utilize Heroku free tier dyno.
 4. Attach the PostgreSQL database plugin from Heroku.
 5. Create a ```SECRET_KEY``` environment variable on the Heroku dashboard.
 6. Restart the dyno and enjoy.
