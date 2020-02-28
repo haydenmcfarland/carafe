@@ -20,7 +20,7 @@ def load_config(app):
         app.config['THREADED'] = False
     else:
         app.config['THREADED'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = environ['CARAFE_DATABASE_URL']
+        app.config['SQLALCHEMY_DATABASE_URI'] = environ['DATABASE_URL']
         app.config['SECRET_KEY'] = environ['SECRET_KEY']
 
     app.config['PORT'] = os.getenv('CARAFE_PORT', 8000)
