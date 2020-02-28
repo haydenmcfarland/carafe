@@ -18,6 +18,7 @@ Carafe is an online message board written in Python. Carafe utilizes the Flask f
 - REST API
 - Verification Email
 - Password Reset
+- Initial Setup Workflow
 
 ## Deployment (Heroku)
 
