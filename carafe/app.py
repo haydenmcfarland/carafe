@@ -27,6 +27,8 @@ LOGIN_MANAGER.anonymous_user = AnonymousUser
 LOGIN_MANAGER.init_app(APP)
 
 # DATABASE HELPERS
+
+
 def create_database_tables():
     """
     initializes database in the proper application context
