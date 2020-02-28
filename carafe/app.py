@@ -26,6 +26,14 @@ LOGIN_MANAGER = LoginManager()
 LOGIN_MANAGER.anonymous_user = AnonymousUser
 LOGIN_MANAGER.init_app(APP)
 
+# DATABASE HELPERS
+def create_database_tables():
+    """
+    initializes database in the proper application context
+    """
+    with APP.app_context():
+        DB.create_all()
+
 # ERROR HANDLER
 @APP.errorhandler(404)
 def page_not_found(_error):
@@ -63,16 +71,6 @@ def load_user(uid):
     """
     return User.query.get(uid)
 
-
-# Database Helper function to Initialize Database Tables
-def create_database_tables():
-    """
-    initializes database in the proper application context
-    """
-    with APP.app_context():
-        DB.create_all()
-
-
 # Routes
 @APP.route('/', methods=constants.METHODS)
 def index():
@@ -81,8 +79,7 @@ def index():
     """
     return render_template(
         'index.html',
-        boards=Board.query.filter_by(
-            deleted=False),
+        boards=Board.query.filter_by(deleted=False),
         form=BoardForm())
 
 
@@ -149,16 +146,22 @@ def sign_up():
 
     form = SignupForm(request.form)
     if request.method == 'POST' and form.validate():
-        for user in User.query.all():
-            if (user.username == form.username.data.lower() or
-                    user.email == form.email.data.lower()):
-                flash('Username or email is already taken.')
-                return render_template('signup.html', form=form)
+        form_user = form.username.data.lower()
+        form_email = form.email.data.lower()
+        user_already_exists = User.query.filter(
+            (User.username == form_user) | (User.email == form_email)
+        ).scalar()
+
+        if user_already_exists:
+            flash('Username or email is already taken.')
+            return render_template('signup.html', form=form)
+
         user = User(
             form.username.data.lower(),
             form.email.data.lower(),
-            sha.encrypt(
-                form.password.data))
+            sha.encrypt(form.password.data)
+        )
+
         DB.session.add(user)
         DB.session.commit()
         flash('Thanks for registering, {}!'.format(user.username))
