@@ -17,7 +17,7 @@ gunicorn==20.0.4
 htmlmin==0.1.12
 isort==4.3.21
 itsdangerous==1.1.0
-Jinja2==2.11.1
+Jinja2==2.11.2
 jinjalint==0.5
 jsonify==0.5
 lazy-object-proxy==1.4.3
