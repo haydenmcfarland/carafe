@@ -1,4 +1,4 @@
-# Carafe (2017)
+# Carafe Sample Blog/Forum (2017)
 
 ## Summary:
 
@@ -11,14 +11,6 @@ Carafe is an online message board written in Python. Carafe utilizes the Flask f
 - Markdown Support
 - Registration
 - Basic Post/Comment administration
-
-#### Planned (no longer in active development as of 2017)
-- User Management
-- Admin Panel
-- REST API
-- Verification Email
-- Password Reset
-- Initial Setup Workflow
 
 ## Deployment (Heroku)
 
