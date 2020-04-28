@@ -13,12 +13,10 @@ from carafe.database.model import Board, Post, Comment, User, DB
 from carafe.forms import (
     BoardForm, PostForm, CommentForm, LoginForm, SignupForm
 )
-from carafe.rest.api import API
 from carafe import constants
 
 # APP INIT
 APP = Flask(__name__)
-APP.register_blueprint(API)
 load_config(APP)
 DB.init_app(APP)
 DB.app = APP
