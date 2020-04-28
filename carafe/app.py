@@ -13,12 +13,10 @@ from carafe.database.model import Board, Post, Comment, User, DB
 from carafe.forms import (
     BoardForm, PostForm, CommentForm, LoginForm, SignupForm
 )
-from carafe.rest.api import API
 from carafe import constants
 
 # APP INIT
 APP = Flask(__name__)
-APP.register_blueprint(API)
 load_config(APP)
 DB.init_app(APP)
 DB.app = APP
@@ -210,8 +208,8 @@ def create_board():
     """
     form = BoardForm(request.form)
     if current_user.is_admin and request.method == 'POST' and form.validate():
-        if form.name.data.lower() not in [
-                b.name.lower() for b in Board.query.all()]:
+        board_name = form.name.data.lower()
+        if not Board.query.filter(Board.name == board_name).scalar():
             DB.session.add(Board(form.name.data, form.desc.data))
             DB.session.commit()
             flash('Board ({}) successfully created!'.format(form.name.data))
@@ -219,8 +217,7 @@ def create_board():
             flash('Duplicate board detected.')
     return render_template(
         'index.html',
-        boards=Board.query.filter_by(
-            deleted=False),
+        boards=Board.query.filter_by(deleted=False),
         form=form)
 
 
