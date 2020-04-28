@@ -1,6 +1,6 @@
 astroid==2.4.0
 attrs==19.3.0
-autopep8==1.5.1
+autopep8==1.5.2
 beautifulsoup4==4.9.0
 blinker==1.4
 Click==7.1.1
