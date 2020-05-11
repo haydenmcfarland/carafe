@@ -21,7 +21,7 @@ Jinja2==2.11.2
 jinjalint==0.5
 jsonify==0.5
 lazy-object-proxy==1.4.3
-Markdown==3.2.1
+Markdown==3.2.2
 MarkupSafe==1.1.1
 mccabe==0.6.1
 micawber==0.5.1
