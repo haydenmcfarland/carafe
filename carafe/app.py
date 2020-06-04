@@ -5,7 +5,7 @@ from flask_login import (
 )
 from htmlmin.main import minify
 from passlib.hash import sha512_crypt as sha
-from sqlalchemy import text
+from sqlalchemy import text, func
 
 from carafe.config import load_config
 from carafe.extensions.login import AnonymousUser
@@ -208,8 +208,9 @@ def create_board():
     """
     form = BoardForm(request.form)
     if current_user.is_admin and request.method == 'POST' and form.validate():
-        if form.name.data.lower() not in [
-                b.name.lower() for b in Board.query.all()]:
+        if Board.query.filter(
+            func.lower(Board.name) == func.lower(form.name.data)
+        ).scalar() is None:
             DB.session.add(Board(form.name.data, form.desc.data))
             DB.session.commit()
             flash('Board ({}) successfully created!'.format(form.name.data))
@@ -217,8 +218,7 @@ def create_board():
             flash('Duplicate board detected.')
     return render_template(
         'index.html',
-        boards=Board.query.filter_by(
-            deleted=False),
+        boards=Board.query.filter_by(deleted=False),
         form=form)
 
 
