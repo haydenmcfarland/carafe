@@ -1,7 +1,7 @@
 astroid==2.4.2
 attrs==19.3.0
 autopep8==1.5.3
-beautifulsoup4==4.9.1
+beautifulsoup4==4.9.2
 blinker==1.4
 Click==7.1.2
 decorator==4.4.2
